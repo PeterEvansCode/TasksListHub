@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">GoogleTasksAssistant</string>
+    <string name="place_holder">Place Holder</string>
+    <string name="checkbox">CheckBox</string>
+</resources>
