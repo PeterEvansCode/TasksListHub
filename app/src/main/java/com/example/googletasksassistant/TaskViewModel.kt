@@ -30,12 +30,23 @@ class TaskViewModel(private val repository: TaskItemRepository) : ViewModel()
             taskItem.completedDateString = TaskItem.dateFormatter.format(LocalDate.now())
         repository.updateTaskItem(taskItem)
     }
+
+    fun undoCompleted(taskItem: TaskItem)= viewModelScope.launch {
+        if(taskItem.isCompleted())
+            taskItem.completedDateString = null
+        repository.updateTaskItem(taskItem)
+    }
+
+    fun deleteTaskItem(taskItem: TaskItem)= viewModelScope.launch {
+        repository.deleteTaskItem(taskItem)
+    }
 }
 
 class TaskItemModelFactory(private val repository: TaskItemRepository): ViewModelProvider.Factory
 {
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TaskViewModel::class.java))
+            @Suppress("UNCHECKED_CAST")
             return TaskViewModel(repository) as T
 
         throw IllegalArgumentException("Unknown Class for ViewModel")

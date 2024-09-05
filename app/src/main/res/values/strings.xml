@@ -2,4 +2,7 @@
     <string name="app_name">GoogleTasksAssistant</string>
     <string name="place_holder">Place Holder</string>
     <string name="checkbox">CheckBox</string>
+    <string name="delete_button">Bin</string>
+    <string name="open_nav">Open Navigation Drawer</string>
+    <string name="close_nav">Close Navigation Drawer</string>
 </resources>

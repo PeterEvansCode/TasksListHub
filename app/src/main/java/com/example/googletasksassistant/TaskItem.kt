@@ -19,7 +19,7 @@ class TaskItem(
     @PrimaryKey(autoGenerate = true) var id: Int = 0
 )
 {
-    fun completedDate(): LocalDate? = if (completedDateString == null) null
+    private fun completedDate(): LocalDate? = if (completedDateString == null) null
         else LocalDate.parse(completedDateString, dateFormatter)
 
     fun dueTime(): LocalTime? = if (dueTimeString == null) null

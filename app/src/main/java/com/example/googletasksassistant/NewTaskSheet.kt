@@ -21,6 +21,11 @@ class NewTaskSheet(var taskItem: TaskItem?) : BottomSheetDialogFragment()
     private lateinit var taskViewModel: TaskViewModel
     private var dueTime: LocalTime? = null
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentNewTaskSheetBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val activity = requireActivity()
@@ -40,7 +45,7 @@ class NewTaskSheet(var taskItem: TaskItem?) : BottomSheetDialogFragment()
             binding.taskTitle.text = "New Task"
         }
 
-        taskViewModel = ViewModelProvider(activity).get(TaskViewModel::class.java)
+        taskViewModel = ViewModelProvider(activity)[TaskViewModel::class.java]
         binding.saveButton.setOnClickListener{
             saveAction()
         }
@@ -63,11 +68,6 @@ class NewTaskSheet(var taskItem: TaskItem?) : BottomSheetDialogFragment()
 
     private fun updateTimeButtonText() {
         binding.timePickerButton.text = String.format("%02d:%02d", dueTime!!.hour, dueTime!!.minute)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentNewTaskSheetBinding.inflate(inflater, container, false)
-        return binding.root
     }
 
     private fun saveAction()
