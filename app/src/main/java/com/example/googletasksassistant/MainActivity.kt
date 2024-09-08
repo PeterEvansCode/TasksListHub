@@ -1,64 +1,20 @@
 package com.example.googletasksassistant
 
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.googletasksassistant.databinding.ActivityMainBinding
+import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity : AppCompatActivity(), TaskItemClickListener
-{
-    private lateinit var binding : ActivityMainBinding
-    //assign viewModel
-    private val taskViewModel: TaskViewModel by viewModels {
-        TaskItemModelFactory((application as TodoApplication).repository)
-    }
+class MainActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-        //set view
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        //bind newTaskButton
-        binding.newTaskButton.setOnClickListener{
-            //display sheet to create new task
-            NewTaskSheet(null).show(supportFragmentManager, "newTaskTag")
+        // Check if the Fragment is already added to avoid adding it multiple times
+        if (savedInstanceState == null) {
+            val fragment = MainTaskListFragment()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit()
         }
-        setRecyclerView()
-    }
-
-    private fun setRecyclerView(){
-        val mainActivity = this
-        taskViewModel.taskItems.observe(this){
-            binding.todoListRecyclerView.apply{
-                layoutManager = LinearLayoutManager(applicationContext)
-                adapter = TaskItemAdapter(it, mainActivity)
-
-            }
-        }
-    }
-
-    override fun editTaskItem(taskItem: TaskItem) {
-        //edit task if it is not already completed
-        if(!taskItem.isCompleted()) NewTaskSheet(taskItem).show(supportFragmentManager, "newTaskTag")
-    }
-
-    //toggles task between complete and incomplete
-    override fun toggleCompleteTaskItem(taskItem: TaskItem) {
-        //set task as incomplete if already completed
-        if(taskItem.isCompleted()) taskViewModel.undoCompleted(taskItem)
-        //set task as complete if currently incomplete
-        else taskViewModel.setCompleted(taskItem)
-    }
-
-    override fun deleteTaskItem(taskItem: TaskItem) {
-        //delete task
-        taskViewModel.deleteTaskItem(taskItem)
     }
 }

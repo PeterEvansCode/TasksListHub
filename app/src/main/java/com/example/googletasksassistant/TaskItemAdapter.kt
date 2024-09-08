@@ -8,11 +8,10 @@ import com.example.googletasksassistant.databinding.TaskItemCellBinding
 class TaskItemAdapter(
     private val taskItems: List<TaskItem>,
     private val clickListener: TaskItemClickListener
-): RecyclerView.Adapter<TaskItemViewHolder>()
-{
+) : RecyclerView.Adapter<TaskItemViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskItemViewHolder {
-        val from = LayoutInflater.from(parent.context)
-        val binding = TaskItemCellBinding.inflate(from, parent, false)
+        val binding = TaskItemCellBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TaskItemViewHolder(parent.context, binding, clickListener)
     }
 
