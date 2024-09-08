@@ -55,7 +55,7 @@
             android:scaleY="1"
             android:contentDescription="@string/delete_button"
             android:layout_marginHorizontal="15dp"
-            android:src="@drawable/delete_outline_24"
+            android:src="@drawable/baseline_delete_24"
             android:backgroundTint="@android:color/transparent"
             />
 

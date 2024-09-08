@@ -33,7 +33,7 @@ class NewTaskSheet(var taskItem: TaskItem?) : BottomSheetDialogFragment() {
 
         val repository = (requireActivity().application as TodoApplication).repository
         val factory = TaskItemModelFactory(repository)
-        taskViewModel = ViewModelProvider(this, factory).get(TaskViewModel::class.java)
+        taskViewModel = ViewModelProvider(this, factory)[TaskViewModel::class.java]
 
         if (taskItem != null) {
             binding.taskTitle.text = "Edit Task"
