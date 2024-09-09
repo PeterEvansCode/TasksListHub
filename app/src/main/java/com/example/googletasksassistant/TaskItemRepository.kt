@@ -1,27 +1,30 @@
 package com.example.googletasksassistant
 
+import TaskDatabaseManager
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.LiveData
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
-class TaskItemRepository(private val taskItemDao: TaskItemDao)
+class TaskItemRepository(private val db: TaskDatabaseManager)
 {
-    val allTaskItems: Flow<List<TaskItem>> = taskItemDao.allTaskItems()
+    val allTaskItems: LiveData<List<TaskItem>> = db.tasksLiveData
 
     @WorkerThread
     suspend fun insertTaskItem(taskItem: TaskItem)
     {
-        taskItemDao.insertTaskItem(taskItem)
+        db.insertTask(taskItem)
     }
 
     @WorkerThread
     suspend fun updateTaskItem(taskItem: TaskItem)
     {
-        taskItemDao.updateTaskItem(taskItem)
+        db.updateTask(taskItem)
     }
 
     @WorkerThread
     suspend fun deleteTaskItem(taskItem: TaskItem)
     {
-        taskItemDao.deleteTaskItem(taskItem)
+        db.deleteTask(taskItem)
     }
 }

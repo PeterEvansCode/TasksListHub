@@ -10,13 +10,12 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-@Entity(tableName = "task_item_table")
 class TaskItem(
-    @ColumnInfo(name = "name") var name: String,
-    @ColumnInfo(name = "desc") var desc: String,
-    @ColumnInfo(name = "dueTimeString") var dueTimeString: String?,
-    @ColumnInfo(name = "completedDateString") var completedDateString: String?,
-    @PrimaryKey(autoGenerate = true) var id: Int = 0
+    var name: String,
+    var desc: String,
+    var dueTimeString: String?,
+    var completedDateString: String?,
+    var id: Int = 0
 )
 {
     private fun completedDate(): LocalDate? = if (completedDateString == null) null
