@@ -7,7 +7,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.googletasksassistant.databinding.FragmentNewTaskSheetBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -40,7 +39,7 @@ class NewTaskSheet(var taskItem: TaskItem?) : BottomSheetDialogFragment() {
             binding.taskTitle.text = "Edit Task"
             binding.name.text = Editable.Factory.getInstance().newEditable(taskItem!!.name)
             binding.desc.text = Editable.Factory.getInstance().newEditable(taskItem!!.desc)
-            taskItem!!.dueTime()?.let {
+            taskItem!!.formatDueTime()?.let {
                 dueTime = it
                 updateTimeButtonText()
             }

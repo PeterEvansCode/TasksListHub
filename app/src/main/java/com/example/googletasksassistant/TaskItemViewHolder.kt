@@ -25,8 +25,8 @@ class TaskItemViewHolder(
             }
 
 
-            binding.completeButton.setImageResource(taskItem.imageResource())
-            binding.completeButton.setColorFilter(taskItem.imageColor(context))
+            binding.completeButton.setImageResource(taskItem.getImageResource())
+            binding.completeButton.setColorFilter(taskItem.getImageColor(context))
 
             binding.completeButton.setOnClickListener{
                 clickListener.toggleCompleteTaskItem(taskItem)
@@ -38,8 +38,8 @@ class TaskItemViewHolder(
                 clickListener.deleteTaskItem(taskItem)
             }
 
-            if(taskItem.dueTime() != null){
-                binding.dueTime.text = timeFormat.format(taskItem.dueTime())
+            if(taskItem.formatDueTime() != null){
+                binding.dueTime.text = timeFormat.format(taskItem.formatDueTime())
             }
             else
                 binding.dueTime.text = ""
