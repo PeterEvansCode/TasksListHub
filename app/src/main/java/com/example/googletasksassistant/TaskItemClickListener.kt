@@ -1,5 +1,7 @@
 package com.example.googletasksassistant
 
+import com.example.googletasksassistant.models.TaskItem
+
 interface TaskItemClickListener
 {
     fun editTaskItem(taskItem: TaskItem)

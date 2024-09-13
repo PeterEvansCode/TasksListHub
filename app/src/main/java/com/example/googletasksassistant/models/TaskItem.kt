@@ -1,7 +1,8 @@
-package com.example.googletasksassistant
+package com.example.googletasksassistant.models
 
 import android.content.Context
 import androidx.core.content.ContextCompat
+import com.example.googletasksassistant.R
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -12,7 +13,7 @@ class TaskItem(
     var desc: String,
     var dueTimeString: String?,
     var completedDateString: String?,
-    var tags: MutableList<String> = mutableListOf()
+    var tags: MutableList<TaskTag> = mutableListOf()
 )
 {
     //converts completedDateString into a LocalDate type

@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Paint
 import androidx.recyclerview.widget.RecyclerView
 import com.example.googletasksassistant.databinding.TaskItemCellBinding
+import com.example.googletasksassistant.models.TaskItem
 import java.time.format.DateTimeFormatter
 
 class TaskItemViewHolder(

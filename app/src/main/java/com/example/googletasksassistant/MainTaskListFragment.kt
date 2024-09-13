@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.googletasksassistant.databinding.FragmentMainTaskListBinding
+import com.example.googletasksassistant.models.TaskItem
 
 class MainTaskListFragment : Fragment(), TaskItemClickListener {
 

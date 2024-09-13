@@ -1,9 +1,8 @@
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.example.googletasksassistant.TaskItem
+import com.example.googletasksassistant.models.TaskItem
+import com.example.googletasksassistant.models.TaskTag
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -33,16 +32,8 @@ class TaskDatabaseManager(context: Context) {
     private val TASKS_TAGS_TASKS_ID = "taskID"
     private val TASKS_TAGS_TAGS_ID = "tagID"
 
-
-    //makes all taskItems visible to the UI
-    private val _tasksLiveData = MutableLiveData<List<TaskItem>>()
-    val tasksLiveData: LiveData<List<TaskItem>> get() = _tasksLiveData
-
     //database
     private val database: SQLiteDatabase
-
-    // Instantiate coroutine handler
-    private val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
 
     init {
         //create a database if one doesn't already exist
@@ -52,9 +43,6 @@ class TaskDatabaseManager(context: Context) {
             throw e
         }
         onCreate(database)
-
-        //convert all database entries into taskItems
-        coroutineScope.launch { loadInitialTasks() }
     }
 
     private fun onCreate(db: SQLiteDatabase) {
@@ -126,15 +114,6 @@ class TaskDatabaseManager(context: Context) {
                     throw Exception("Failed to retrieve last inserted row ID.")
                 }
             }
-            // Add task to local list
-            addTaskToLocalList(
-                TaskItem(
-                    id,
-                    taskItem.name,
-                    taskItem.desc,
-                    taskItem.dueTimeString,
-                    taskItem.completedDateString
-                    ))
         }
     }
 
@@ -156,9 +135,6 @@ class TaskDatabaseManager(context: Context) {
                     taskItem.completedDateString
                 )
             )
-
-            // Update task in local list
-            updateTaskInLocalList(taskItem)
         }
     }
 
@@ -176,65 +152,70 @@ class TaskDatabaseManager(context: Context) {
                     taskItem.id
                 )
             )
-
-            // Remove task from local list
-            removeTaskFromLocalList(taskItem.id)
         }
     }
 
-    private suspend fun loadInitialTasks() {
-        withContext(Dispatchers.IO) {
-            //get tasks
-            val query = "SELECT * FROM $TASKS_TABLE"
-            val cursor = database.rawQuery(query, null)
-            val tasks = mutableListOf<TaskItem>()
+    suspend fun getAllTasks(): MutableList<TaskItem> = withContext(Dispatchers.IO)
+    {
+        //get tasks
+        val query = "SELECT * FROM $TASKS_TABLE"
+        val cursor = database.rawQuery(query, null)
+        val tasks = HashMap<Int, TaskItem>()
 
-            cursor.use {
-                while (cursor.moveToNext()) {
-                    val taskID = cursor.getInt(cursor.getColumnIndexOrThrow(TASK_ID))
-                    val name = cursor.getString(cursor.getColumnIndexOrThrow(TASK_NAME))
-                    val description = cursor.getString(cursor.getColumnIndexOrThrow(TASK_DESC))
-                    val dueTime = cursor.getString(cursor.getColumnIndexOrThrow(TASK_DUE_TIME))
-                    val completedDate = cursor.getString(cursor.getColumnIndexOrThrow(TASK_COMPLETED_DATE))
+        cursor.use {
+            while (cursor.moveToNext()) {
+                val taskID = cursor.getInt(cursor.getColumnIndexOrThrow(TASK_ID))
+                val name = cursor.getString(cursor.getColumnIndexOrThrow(TASK_NAME))
+                val description = cursor.getString(cursor.getColumnIndexOrThrow(TASK_DESC))
+                val dueTime = cursor.getString(cursor.getColumnIndexOrThrow(TASK_DUE_TIME))
+                val completedDate = cursor.getString(cursor.getColumnIndexOrThrow(TASK_COMPLETED_DATE))
 
-                    tasks.add(TaskItem(taskID, name, description, dueTime, completedDate))
-                }
+                tasks.put(taskID, TaskItem(taskID, name, description, dueTime, completedDate))
             }
+        }
 
-            for (task in tasks) {
-                database.execSQL("""
-                    SELECT $TAGS_TABLE.$TAG_ID, $TAGS_TABLE.$TAG_NAME
-                    FROM tags
-                    INNER JOIN task_tags ON tags.id = task_tags.tag_id
-                    WHERE task_tags.task_id = ?
-                """.trimIndent()
-                )
+        val tags = getTags(tasks.keys)
+
+        //find tags for each task
+        for (pair in tags)
+            tasks[pair.first]!!.tags.add(pair.second)
+
+
+        // Update LiveData
+        tasks.values.toMutableList()
+    }
+
+    private fun getTags (taskIDs: Set<Int>): MutableList<Pair<Int, TaskTag>>{
+        val tags = mutableListOf<Pair<Int, TaskTag>>() // Pair of taskId and Tag
+
+        if (taskIDs.isEmpty()) return tags // If there are no task IDs
+
+        // Create a parameterized IN clause based on the number of task IDs
+        val placeholders = taskIDs.joinToString(",") { "?" }
+
+        val cursor = database.rawQuery(
+            """
+            SELECT $TAGS_TABLE.$TAG_ID, $TAGS_TABLE.$TAG_NAME, $TASKS_TAGS_TABLE.$TASKS_TAGS_TASKS_ID
+            FROM $TAGS_TABLE
+            INNER JOIN $TASKS_TAGS_TABLE ON $TAGS_TABLE.$TAG_ID = $TASKS_TAGS_TABLE.$TASKS_TAGS_TAGS_ID
+            WHERE $TASKS_TAGS_TABLE.$TASKS_TAGS_TASKS_ID IN ($placeholders)
+            """.trimIndent(),
+
+            arrayOf(
+                taskIDs.toString()
+            )
+        )
+
+        //save as taskTag objects
+        cursor.use {
+            while (cursor.moveToNext()) {
+                val taskId = cursor.getInt(cursor.getColumnIndexOrThrow(TASKS_TAGS_TASKS_ID))
+                val tagId = cursor.getInt(cursor.getColumnIndexOrThrow(TAG_ID))
+                val tagName = cursor.getString(cursor.getColumnIndexOrThrow(TAG_NAME))
+                tags.add(Pair(taskId, TaskTag(tagId, tagName))) // Assuming you have a Tag class
             }
-            _tasksLiveData.postValue(tasks) // Update LiveData
-        }
-    }
-
-    private fun addTaskToLocalList(taskItem: TaskItem) {
-        val currentList = _tasksLiveData.value?.toMutableList() ?: mutableListOf()
-        currentList.add(taskItem)
-        _tasksLiveData.postValue(currentList)
-    }
-
-    private fun updateTaskInLocalList(taskItem: TaskItem) {
-        val currentList = _tasksLiveData.value?.toMutableList() ?: mutableListOf()
-
-        val index = currentList.indexOfFirst { it.id == taskItem.id }
-        if (index != -1) {
-            currentList[index] = taskItem
-        } else {
-            throw Exception("The taskItem "+taskItem.id+": "+taskItem.name+" does not exist in the TaskDatabaseManager LiveData")
         }
 
-        _tasksLiveData.postValue(currentList)
-    }
-
-    private fun removeTaskFromLocalList(taskId: Int) {
-        val currentList = _tasksLiveData.value?.filter { it.id != taskId } ?: emptyList()
-        _tasksLiveData.postValue(currentList)
+        return tags
     }
 }
