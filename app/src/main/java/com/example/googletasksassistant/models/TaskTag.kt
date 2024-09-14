@@ -1,8 +1,8 @@
 package com.example.googletasksassistant.models
 
 class TaskTag (
-    val id: Int,
-    val name: String
+    var id: Int,
+    var name: String
 )
 {
 }

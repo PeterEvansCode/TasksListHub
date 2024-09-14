@@ -10,9 +10,9 @@ import java.time.format.DateTimeFormatter
 class TaskItem(
     var id: Int = 0,
     var name: String,
-    var desc: String,
-    var dueTimeString: String?,
-    var completedDateString: String?,
+    var desc: String = "",
+    var dueTimeString: String? = null,
+    var completedDateString: String? = null,
     var tags: MutableList<TaskTag> = mutableListOf()
 )
 {

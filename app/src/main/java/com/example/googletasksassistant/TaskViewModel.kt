@@ -14,23 +14,23 @@ class TaskViewModel(private val repository: TaskItemRepository) : ViewModel()
     var taskItems: LiveData<List<TaskItem>> = repository.allTaskItems
 
     fun addTaskItem(newTask: TaskItem) = viewModelScope.launch(Dispatchers.IO) {
-        repository.insertTaskItem(newTask)
+        repository.addTaskItem(newTask)
     }
 
     fun updateTaskItem(taskItem: TaskItem)= viewModelScope.launch(Dispatchers.IO) {
-        repository.updateTaskItem(taskItem)
+        repository.editTaskItem(taskItem)
     }
 
     fun setCompleted(taskItem: TaskItem)= viewModelScope.launch(Dispatchers.IO) {
         if(!taskItem.isCompleted())
             taskItem.completedDateString = TaskItem.dateFormatter.format(LocalDate.now())
-        repository.updateTaskItem(taskItem)
+        repository.editTaskItem(taskItem)
     }
 
     fun undoCompleted(taskItem: TaskItem)= viewModelScope.launch(Dispatchers.IO) {
         if(taskItem.isCompleted())
             taskItem.completedDateString = null
-        repository.updateTaskItem(taskItem)
+        repository.editTaskItem(taskItem)
     }
 
     fun deleteTaskItem(taskItem: TaskItem)= viewModelScope.launch(Dispatchers.IO) {
