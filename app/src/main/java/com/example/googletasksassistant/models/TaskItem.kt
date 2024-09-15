@@ -3,6 +3,7 @@ package com.example.googletasksassistant.models
 import android.content.Context
 import androidx.core.content.ContextCompat
 import com.example.googletasksassistant.R
+import com.example.googletasksassistant.models.taskStores.HashOnID
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -13,7 +14,7 @@ class TaskItem(
     var desc: String = "",
     var dueTimeString: String? = null,
     var completedDateString: String? = null,
-    var tags: MutableList<TaskTag> = mutableListOf()
+    var tags: HashOnID<TaskTag> = HashOnID()
 ) : IRecordWithID
 {
     //converts completedDateString into a LocalDate type

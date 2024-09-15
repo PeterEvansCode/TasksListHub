@@ -65,10 +65,17 @@ class TagSelectionFragment(var taskItem: TaskItem) : DialogFragment(), ITaskTagC
 
     private fun setRecyclerView() {
         var tagSelectionFragment = this
-        tagSelectionViewModel.taskTags.observe(viewLifecycleOwner) {
+        tagSelectionViewModel.taskTags.observe(viewLifecycleOwner) { allTags ->
+            //sort tags first by association, then by name
+            val taskAssociatedTags = allTags.filter { taskItem.tags.containsKey(it.id) }
+                .sortedBy { it.name }
+            val otherTags = allTags.filter { !taskItem.tags.containsKey(it.id) }
+                .sortedBy { it.name }
+            val sortedTags = taskAssociatedTags + otherTags
+
             _binding!!.tagRecyclerView.apply {
                 layoutManager = LinearLayoutManager(context)
-                adapter = TaskTagAdapter(it, tagSelectionFragment)
+                adapter = TaskTagAdapter(sortedTags, taskAssociatedTags.size, tagSelectionFragment)
             }
         }
     }
@@ -91,13 +98,13 @@ class TagSelectionFragment(var taskItem: TaskItem) : DialogFragment(), ITaskTagC
     //TaskTagClickListener methods
     override fun selectTaskTag(taskTag: TaskTag) {
         //only add taskTag to the add tag list if it isn't in the remove tag list
-        if (_tagsToRemove.existId(taskTag.id)) _tagsToRemove.removeRecord(taskTag)
-        else _tagsToAdd.addRecord(taskTag)
+        if (_tagsToRemove.existId(taskTag.id)) _tagsToRemove.remove(taskTag)
+        else _tagsToAdd.add(taskTag)
     }
 
     override fun deselectTaskTag(taskTag: TaskTag) {
         //only add taskTag to the remove tag list if it isn't in the add tag list
-        if (_tagsToAdd.existId(taskTag.id)) _tagsToAdd.removeRecord(taskTag)
-        else _tagsToRemove.addRecord(taskTag)
+        if (_tagsToAdd.existId(taskTag.id)) _tagsToAdd.remove(taskTag)
+        else _tagsToRemove.add(taskTag)
     }
 }

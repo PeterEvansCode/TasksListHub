@@ -6,13 +6,15 @@ import com.example.googletasksassistant.databinding.TaskTagCellBinding
 import com.example.googletasksassistant.models.TaskTag
 
 class TaskTagViewHolder(
-    private val context: Context,
     private val binding: TaskTagCellBinding,
     private val clickListener: ITaskTagClickListener
 ): RecyclerView.ViewHolder(binding.root){
-    fun bindTaskTag(taskTag: TaskTag){
+    fun bindTaskTag(taskTag: TaskTag, isAssignedToTask: Boolean){
         //display task name
         binding.tagName.text = taskTag.name
+
+        //check box if task is already assigned
+        binding.tagCheckbox.isChecked = isAssignedToTask
 
         binding.tagCheckbox.setOnClickListener{
             if (binding.tagCheckbox.isChecked) clickListener.selectTaskTag(taskTag)

@@ -309,7 +309,7 @@ class TaskDatabaseManager(private val context: Context) {
                 val dueTime = cursor.getString(cursor.getColumnIndexOrThrow(TASK_DUE_TIME))
                 val completedDate = cursor.getString(cursor.getColumnIndexOrThrow(TASK_COMPLETED_DATE))
 
-                tasks.addRecord(TaskItem(id = taskID, name = name, desc = description, dueTimeString = dueTime, completedDateString = completedDate))
+                tasks.add(TaskItem(id = taskID, name = name, desc = description, dueTimeString = dueTime, completedDateString = completedDate))
             }
         }
 
