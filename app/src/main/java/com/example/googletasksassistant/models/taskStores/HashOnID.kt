@@ -1,23 +1,21 @@
 package com.example.googletasksassistant.models.taskStores
 
-import com.example.googletasksassistant.models.TaskItem
+import com.example.googletasksassistant.models.IRecordWithID
 
-class HashOnID {
-    val taskItems = HashMap<Int, TaskItem>()
-
-    fun add(taskItem: TaskItem){
-        taskItems.put(taskItem.id, taskItem)
+class HashOnID<T: IRecordWithID>: HashMap<Int, T>(){
+    fun addRecord(item: T){
+        put(item.id, item)
     }
 
-    fun remove(taskItem: TaskItem){
-        taskItems.remove(taskItem.id)
+    fun removeRecord(item: T){
+        remove(item.id)
     }
 
-    fun update(taskItem: TaskItem){
-        taskItems[taskItem.id] = taskItem
+    fun updateRecord(item: T){
+        this[item.id] = item
     }
 
-    fun get(taskID: Int): TaskItem{
-        return taskItems[taskID]!!
+    fun existId(id: Int): Boolean{
+        return containsKey(id)
     }
 }

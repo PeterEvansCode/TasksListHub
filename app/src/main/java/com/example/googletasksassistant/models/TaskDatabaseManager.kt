@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import com.example.googletasksassistant.TodoApplication
+import com.example.googletasksassistant.models.taskStores.HashOnID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -14,15 +15,16 @@ class TaskDatabaseManager(private val context: Context) {
     //tasks table constants
     private val TASKS_TABLE = "tasks"
     private val TASK_ID = "taskID"
-    private val TASK_NAME = "name"
-    private val TASK_DESC = "description"
-    private val TASK_DUE_TIME = "dueTime"
-    private val TASK_COMPLETED_DATE = "completedDate"
+    private val TASK_NAME = "taskName"
+    private val TASK_DESC = "taskDescription"
+    private val TASK_DUE_TIME = "taskDueTime"
+    private val TASK_COMPLETED_DATE = "taskCompletedDate"
 
     //tags table constants
     private val TAGS_TABLE = "tags"
     private val TAG_ID = "tagID"
     private val TAG_NAME = "tagName"
+    private val TAG_DESC = "tagDescription"
 
     //task-tags relation table constants
     private val TASKS_TAGS_TABLE = "taskTagsRelations"
@@ -68,7 +70,8 @@ class TaskDatabaseManager(private val context: Context) {
             """
             CREATE TABLE IF NOT EXISTS $TAGS_TABLE (
                 $TAG_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                $TAG_NAME TEXT
+                $TAG_NAME TEXT,
+                $TAG_DESC TEXT
             )
             """.trimIndent()
         )
@@ -136,13 +139,14 @@ class TaskDatabaseManager(private val context: Context) {
             database.execSQL(
                 //query
                 """
-                INSERT INTO $TAGS_TABLE ($TAG_NAME)
-                VALUES (?)
+                INSERT INTO $TAGS_TABLE ($TAG_NAME, $TAG_DESC)
+                VALUES (?, ?)
                 """.trimIndent(),
 
                 //arguments
                 arrayOf(
-                    taskTag.name
+                    taskTag.name,
+                    taskTag.desc
                 )
             )
 
@@ -168,21 +172,27 @@ class TaskDatabaseManager(private val context: Context) {
         }
     }
 
-    suspend fun insertTaskTagRelation(taskItem: TaskItem, taskTag: TaskTag){
+    suspend fun insertTaskTagRelations(taskItem: TaskItem, taskTags: List<TaskTag>) {
         withContext(Dispatchers.IO) {
-            database.execSQL(
-                //query
-                """
-                INSERT INTO $TASKS_TAGS_TABLE ($TASKS_TAGS_TASKS_ID, $TASKS_TAGS_TAGS_ID)
-                VALUES (?, ?)
-                """.trimIndent(),
+            if (taskTags.isNotEmpty()) {
+                // Create a comma-separated list of placeholders for SQL
+                val placeholders = taskTags.joinToString(separator = ",") { "(?, ?)" }
 
-                //arguments
-                arrayOf(
-                    taskItem.id,
-                    taskTag.id
-                )
-            )
+                val sql = """
+                INSERT INTO $TASKS_TAGS_TABLE ($TASKS_TAGS_TASKS_ID, $TASKS_TAGS_TAGS_ID)
+                VALUES $placeholders
+            """.trimIndent()
+
+                // Prepare the arguments array
+                val args = mutableListOf<Int>()
+                for (taskTag in taskTags) {
+                    args.add(taskItem.id)
+                    args.add(taskTag.id)
+                }
+
+                // Execute the SQL statement with arguments
+                database.execSQL(sql, arrayOf(args))
+            }
         }
     }
 
@@ -213,13 +223,14 @@ class TaskDatabaseManager(private val context: Context) {
                 //query
                 """
                 UPDATE $TAGS_TABLE
-                SET $TAG_NAME = ?
+                SET $TAG_NAME = ?, $TAG_DESC = ?
                 WHERE $TAG_ID = ?
                 """.trimIndent(),
 
                 //arguments
                 arrayOf(
-                    taskTag.name
+                    taskTag.name,
+                    taskTag.desc
                 )
             )
         }
@@ -259,21 +270,27 @@ class TaskDatabaseManager(private val context: Context) {
         }
     }
 
-    suspend fun deleteTaskTagRelation(taskItem: TaskItem, taskTag: TaskTag) {
+    suspend fun deleteTaskTagRelations(taskItem: TaskItem, taskTags: List<TaskTag>) {
         withContext(Dispatchers.IO) {
-            database.execSQL(
-                //query
-                """
-                DELETE FROM $TASKS_TAGS_TABLE
-                WHERE $TASKS_TAGS_TASKS_ID = ? AND $TASKS_TAGS_TAGS_ID = ?
-                """.trimIndent(),
+            if (taskTags.isNotEmpty()) {
+                // Create a comma-separated list of placeholders for SQL
+                val placeholders = taskTags.joinToString(separator = ",") { "?" }
 
-                //arguments
-                arrayOf(
-                    taskItem.id,
-                    taskTag.id
-                )
-            )
+                val sql = """
+                DELETE FROM $TASKS_TAGS_TABLE
+                WHERE $TASKS_TAGS_TASKS_ID = ? AND $TASKS_TAGS_TAGS_ID IN ($placeholders)
+            """.trimIndent()
+
+                // Prepare the arguments array
+                val args = mutableListOf<Any>()
+                args.add(taskItem.id)
+                for (taskTag in taskTags) {
+                    args.add(taskTag.id)
+                }
+
+                // Execute the SQL statement with arguments
+                database.execSQL(sql, arrayOf(args))
+            }
         }
     }
 
@@ -282,7 +299,7 @@ class TaskDatabaseManager(private val context: Context) {
         //get tasks
         val query = "SELECT * FROM $TASKS_TABLE"
         val cursor = database.rawQuery(query, null)
-        val tasks = HashMap<Int, TaskItem>()
+        val tasks = HashOnID<TaskItem>()
 
         cursor.use {
             while (cursor.moveToNext()) {
@@ -292,15 +309,15 @@ class TaskDatabaseManager(private val context: Context) {
                 val dueTime = cursor.getString(cursor.getColumnIndexOrThrow(TASK_DUE_TIME))
                 val completedDate = cursor.getString(cursor.getColumnIndexOrThrow(TASK_COMPLETED_DATE))
 
-                tasks.put(taskID, TaskItem(taskID, name, description, dueTime, completedDate))
+                tasks.addRecord(TaskItem(id = taskID, name = name, desc = description, dueTimeString = dueTime, completedDateString = completedDate))
             }
         }
 
         val tags = getTags(tasks.keys)
 
         //find tags for each task
-        for (pair in tags)
-            tasks[pair.first]!!.tags.add(pair.second)
+        for ((taskID, taskTag) in tags)
+            tasks[taskID]!!.tags.add(taskTag)
 
 
         // Update LiveData
@@ -317,7 +334,7 @@ class TaskDatabaseManager(private val context: Context) {
 
         val cursor = database.rawQuery(
             """
-            SELECT $TAGS_TABLE.$TAG_ID, $TAGS_TABLE.$TAG_NAME, $TASKS_TAGS_TABLE.$TASKS_TAGS_TASKS_ID
+            SELECT $TAGS_TABLE.$TAG_ID, $TAGS_TABLE.$TAG_NAME, $TAGS_TABLE.$TAG_DESC, $TASKS_TAGS_TABLE.$TASKS_TAGS_TASKS_ID
             FROM $TAGS_TABLE
             INNER JOIN $TASKS_TAGS_TABLE ON $TAGS_TABLE.$TAG_ID = $TASKS_TAGS_TABLE.$TASKS_TAGS_TAGS_ID
             WHERE $TASKS_TAGS_TABLE.$TASKS_TAGS_TASKS_ID IN ($placeholders)
@@ -334,7 +351,8 @@ class TaskDatabaseManager(private val context: Context) {
                 val taskId = cursor.getInt(cursor.getColumnIndexOrThrow(TASKS_TAGS_TASKS_ID))
                 val tagId = cursor.getInt(cursor.getColumnIndexOrThrow(TAG_ID))
                 val tagName = cursor.getString(cursor.getColumnIndexOrThrow(TAG_NAME))
-                tags.add(Pair(taskId, TaskTag(tagId, tagName))) // Assuming you have a Tag class
+                val tagDesc = cursor.getString(cursor.getColumnIndexOrThrow(TAG_DESC))
+                tags.add(Pair(taskId, TaskTag(id = tagId, name = tagName, desc = tagDesc))) // Assuming you have a Tag class
             }
         }
 

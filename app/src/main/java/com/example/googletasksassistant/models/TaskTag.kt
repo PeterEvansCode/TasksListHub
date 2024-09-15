@@ -1,8 +1,9 @@
 package com.example.googletasksassistant.models
 
 class TaskTag (
-    var id: Int,
-    var name: String
-)
+    override var id: Int = 0,
+    var name: String,
+    var desc: String = ""
+): IRecordWithID
 {
 }

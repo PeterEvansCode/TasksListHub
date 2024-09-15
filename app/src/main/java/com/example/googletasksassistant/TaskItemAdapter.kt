@@ -5,11 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.googletasksassistant.databinding.TaskItemCellBinding
 import com.example.googletasksassistant.models.TaskItem
-import com.example.googletasksassistant.models.TaskTag
 
 class TaskItemAdapter(
     private val taskItems: List<TaskItem>,
-    private val clickListener: TaskItemClickListener
+    private val clickListener: ITaskItemClickListener
 ) : RecyclerView.Adapter<TaskItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskItemViewHolder {

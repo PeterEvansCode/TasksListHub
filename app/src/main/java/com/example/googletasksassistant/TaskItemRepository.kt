@@ -60,13 +60,13 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
     }
 
     @WorkerThread
-    suspend fun addTagToTask(taskItem: TaskItem, taskTag: TaskTag): TaskItem
+    suspend fun addTagsToTask(taskItem: TaskItem, taskTags: List<TaskTag>): TaskItem
     {
         //add to task object
-        taskItem.tags.add(taskTag)
+        for(taskTag in taskTags) taskItem.tags.add(taskTag)
 
         //update database
-        db.insertTaskTagRelation(taskItem, taskTag)
+        db.insertTaskTagRelations(taskItem, taskTags)
 
         //update live data
         editTaskInLocalList(taskItem)
@@ -75,13 +75,13 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
     }
 
     @WorkerThread
-    suspend fun removeTagFromTask(taskItem: TaskItem, taskTag: TaskTag): TaskItem
+    suspend fun removeTagsFromTask(taskItem: TaskItem, taskTags: List<TaskTag>): TaskItem
     {
-        //add to task object
-        taskItem.tags.remove(taskTag)
+        //remove from task object
+        for(taskTag in taskTags) taskItem.tags.remove(taskTag)
 
         //update database
-        db.deleteTaskTagRelation(taskItem, taskTag)
+        db.deleteTaskTagRelations(taskItem, taskTags)
 
         //update live data
         editTaskInLocalList(taskItem)

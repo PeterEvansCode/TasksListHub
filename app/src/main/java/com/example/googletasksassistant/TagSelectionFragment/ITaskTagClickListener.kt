@@ -2,6 +2,7 @@ package com.example.googletasksassistant.TagSelectionFragment
 
 import com.example.googletasksassistant.models.TaskTag
 
-interface TaskTagClickListener {
-    fun toggleSelectTaskTag(taskTag: TaskTag)
+interface ITaskTagClickListener {
+    fun selectTaskTag(taskTag: TaskTag)
+    fun deselectTaskTag(taskTag: TaskTag)
 }

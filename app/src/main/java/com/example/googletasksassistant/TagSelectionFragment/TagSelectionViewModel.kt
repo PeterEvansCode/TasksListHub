@@ -25,6 +25,14 @@ class TagSelectionViewModel(private val repository: TaskItemRepository) : ViewMo
     fun deleteTaskTag(taskTag: TaskTag) = viewModelScope.launch(Dispatchers.IO) {
         repository.deleteTaskTag(taskTag)
     }
+
+    fun addTagsToTask(taskItem: TaskItem, taskTags: List<TaskTag>) = viewModelScope.launch(Dispatchers.IO) {
+        repository.addTagsToTask(taskItem, taskTags)
+    }
+
+    fun removeTagsFromTask(taskItem: TaskItem, taskTags: List<TaskTag>) = viewModelScope.launch(Dispatchers.IO) {
+        repository.removeTagsFromTask(taskItem, taskTags)
+    }
 }
 
 class TagSelectionViewModelFactory(private val repository: TaskItemRepository) : ViewModelProvider.Factory {

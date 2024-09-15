@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter
 class TaskItemViewHolder(
     private val context: Context,
     private val binding: TaskItemCellBinding,
-    private val clickListener: TaskItemClickListener
+    private val clickListener: ITaskItemClickListener
     ): RecyclerView.ViewHolder(binding.root)
 {
         //define format for time to be presented in
@@ -37,6 +37,10 @@ class TaskItemViewHolder(
             }
             binding.deleteButton.setOnClickListener{
                 clickListener.deleteTaskItem(taskItem)
+            }
+
+            binding.addTagButton.setOnClickListener {
+                clickListener.openTaskTagMenu(taskItem)
             }
 
             if(taskItem.formatDueTime() != null){

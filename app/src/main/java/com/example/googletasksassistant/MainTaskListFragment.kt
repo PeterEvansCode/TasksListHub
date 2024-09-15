@@ -7,10 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.googletasksassistant.TagSelectionFragment.TagSelectionFragment
 import com.example.googletasksassistant.databinding.FragmentMainTaskListBinding
 import com.example.googletasksassistant.models.TaskItem
 
-class MainTaskListFragment : Fragment(), TaskItemClickListener {
+class MainTaskListFragment : Fragment(), ITaskItemClickListener {
 
     private var _binding: FragmentMainTaskListBinding? = null
     private val binding get() = _binding!!
@@ -34,7 +35,7 @@ class MainTaskListFragment : Fragment(), TaskItemClickListener {
         // Bind newTaskButton
         binding.newTaskButton.setOnClickListener {
             // Display sheet to create new task
-            NewTaskSheet(null).show(parentFragmentManager, "newTaskTag")
+            NewTaskSheet(null).show(parentFragmentManager, "newTaskItem")
         }
         setRecyclerView()
     }
@@ -65,6 +66,11 @@ class MainTaskListFragment : Fragment(), TaskItemClickListener {
     override fun deleteTaskItem(taskItem: TaskItem) {
         // Delete task
         taskViewModel.deleteTaskItem(taskItem)
+    }
+
+    override fun openTaskTagMenu(taskItem: TaskItem) {
+        val tagSelectionFragment = TagSelectionFragment(taskItem)
+        tagSelectionFragment.show(requireActivity().supportFragmentManager, "TagSelectionFragment")
     }
 
     override fun onDestroyView() {
