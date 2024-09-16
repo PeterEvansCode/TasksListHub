@@ -1,10 +1,14 @@
 package com.example.googletasksassistant.models.taskStores
 
-import com.example.googletasksassistant.models.IRecordWithID
+import com.example.googletasksassistant.models.IStandardRecord
 
-class HashOnID<T: IRecordWithID>: HashMap<Int, T>(){
+class HashOnID<T: IStandardRecord>: HashMap<Int, T>(){
     fun add(item: T){
         put(item.id, item)
+    }
+
+    fun add(items: List<T>){
+        for (item in items) add(item)
     }
 
     fun remove(item: T){

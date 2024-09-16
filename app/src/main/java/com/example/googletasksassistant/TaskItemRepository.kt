@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.googletasksassistant.models.TaskItem
 import com.example.googletasksassistant.models.TaskTag
+import com.example.googletasksassistant.models.taskStores.RecordStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -15,12 +16,14 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
 {
 
     //makes all taskTags visible to the UI
+    private val _taskTagStore = RecordStore<TaskTag>()
     private val _tagsLiveData = MutableLiveData<List<TaskTag>>()
-    val allTaskTags: LiveData<List<TaskTag>> get() = _tagsLiveData
+    val tagsLiveData: LiveData<List<TaskTag>> get() = _tagsLiveData
 
     //makes all taskItems visible to the UI
+    private val _taskItemStore = RecordStore<TaskItem>()
     private val _tasksLiveData = MutableLiveData<List<TaskItem>>()
-    val allTaskItems: LiveData<List<TaskItem>> get() = _tasksLiveData
+    val tasksLiveData: LiveData<List<TaskItem>> get() = _tasksLiveData
 
     // Coroutine scope for background tasks
     private val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
@@ -28,6 +31,9 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
     init{
         coroutineScope.launch(Dispatchers.IO){
             loadTasks()
+        }
+        coroutineScope.launch(Dispatchers.IO){
+            loadTags()
         }
     }
 
@@ -49,14 +55,12 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
     suspend fun editTaskItem(taskItem: TaskItem)
     {
         db.updateTask(taskItem)
-        editTaskInLocalList(taskItem)
     }
 
     @WorkerThread
     suspend fun editTaskTag(taskTag: TaskTag)
     {
         db.updateTag(taskTag)
-        editTagInLocalList(taskTag)
     }
 
     @WorkerThread
@@ -67,9 +71,6 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
 
         //update database
         db.insertTaskTagRelations(taskItem, taskTags)
-
-        //update live data
-        editTaskInLocalList(taskItem)
 
         return taskItem
     }
@@ -82,9 +83,6 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
 
         //update database
         db.deleteTaskTagRelations(taskItem, taskTags)
-
-        //update live data
-        editTaskInLocalList(taskItem)
 
         return taskItem
     }
@@ -103,56 +101,48 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
         removeTagFromLocalList(taskTag)
     }
 
+    @WorkerThread
     private suspend fun loadTasks(){
         val currentList = db.getAllTasks()
-        _tasksLiveData.postValue(currentList)
+        _taskItemStore.add(currentList)
+        _tasksLiveData.postValue(_taskItemStore.getFiltered())
     }
 
+    @WorkerThread
+    private suspend fun loadTags(){
+        val currentList = db.getAllTags()
+        _taskTagStore.add(currentList)
+        _tagsLiveData.postValue(_taskTagStore.getFiltered())
+    }
+
+    fun applyTaskSearchFilter(criteria: String){
+        _taskItemStore.applySearchFilter(criteria)
+        _tasksLiveData.postValue(_taskItemStore.getFiltered())
+    }
+
+    fun applyTagSearchFilter(criteria: String){
+        _taskTagStore.applySearchFilter(criteria)
+        _tagsLiveData.postValue(_taskTagStore.getFiltered())
+    }
+
+    //store functions
     private fun addTaskToLocalList(taskItem: TaskItem) {
-        val currentList = _tasksLiveData.value?.toMutableList() ?: mutableListOf()
-        currentList.add(taskItem)
-        _tasksLiveData.postValue(currentList)
+        _taskItemStore.add(taskItem)
+        _tasksLiveData.postValue(_taskItemStore.getFiltered())
     }
 
     private fun addTagToLocalList(taskTag: TaskTag) {
-        val currentList = _tagsLiveData.value?.toMutableList() ?: mutableListOf()
-        currentList.add(taskTag)
-        _tagsLiveData.postValue(currentList)
-    }
-
-    private fun editTaskInLocalList(taskItem: TaskItem) {
-        val currentList = _tasksLiveData.value?.toMutableList() ?: mutableListOf()
-
-        val index = currentList.indexOfFirst { it.id == taskItem.id }
-        if (index != -1) {
-            currentList[index] = taskItem
-        } else {
-            throw Exception("The taskItem "+taskItem.id+": "+taskItem.name+" does not exist in the LiveData")
-        }
-
-        _tasksLiveData.postValue(currentList)
-    }
-
-    private fun editTagInLocalList(taskTag: TaskTag) {
-        val currentList = _tagsLiveData.value?.toMutableList() ?: mutableListOf()
-
-        val index = currentList.indexOfFirst { it.id == taskTag.id }
-        if (index != -1) {
-            currentList[index] = taskTag
-        } else {
-            throw Exception("The taskTag "+taskTag.id+": "+taskTag.name+" does not exist in the LiveData")
-        }
-
-        _tagsLiveData.postValue(currentList)
+        _taskTagStore.add(taskTag)
+        _tagsLiveData.postValue(_taskTagStore.getFiltered())
     }
 
     private fun removeTaskFromLocalList(taskItem: TaskItem) {
-        val currentList = _tasksLiveData.value?.filter { it.id != taskItem.id } ?: emptyList()
-        _tasksLiveData.postValue(currentList)
+        _taskItemStore.remove(taskItem)
+        _tasksLiveData.postValue(_taskItemStore.getFiltered())
     }
 
     private fun removeTagFromLocalList(taskTag: TaskTag) {
-        val currentList = _tagsLiveData.value?.filter { it.id != taskTag.id } ?: emptyList()
-        _tagsLiveData.postValue(currentList)
+        _taskTagStore.remove(taskTag)
+        _tagsLiveData.postValue(_taskTagStore.getFiltered())
     }
 }

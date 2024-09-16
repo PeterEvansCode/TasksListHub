@@ -11,7 +11,7 @@ import java.time.LocalDate
 
 class TaskViewModel(private val repository: TaskItemRepository) : ViewModel()
 {
-    var taskItems: LiveData<List<TaskItem>> = repository.allTaskItems
+    var taskItems: LiveData<List<TaskItem>> = repository.tasksLiveData
 
     fun addTaskItem(newTask: TaskItem) = viewModelScope.launch(Dispatchers.IO) {
         repository.addTaskItem(newTask)

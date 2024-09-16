@@ -10,12 +10,12 @@ import java.time.format.DateTimeFormatter
 
 class TaskItem(
     override var id: Int = 0,
-    var name: String,
+    override var name: String,
     var desc: String = "",
     var dueTimeString: String? = null,
     var completedDateString: String? = null,
     var tags: HashOnID<TaskTag> = HashOnID()
-) : IRecordWithID
+) : IStandardRecord
 {
     //converts completedDateString into a LocalDate type
     fun formatCompletedDate(): LocalDate? = if (completedDateString == null) null

@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.googletasksassistant.TagSelectionFragment.TagSelectionViewModel
-import com.example.googletasksassistant.TagSelectionFragment.TagSelectionViewModelFactory
 import com.example.googletasksassistant.databinding.FragmentNewTagSheetBinding
 import com.example.googletasksassistant.databinding.FragmentNewTaskSheetBinding
 import com.example.googletasksassistant.models.TaskItem
@@ -44,7 +43,7 @@ class NewTagSheet(var taskTag: TaskTag?) : BottomSheetDialogFragment() {
 
         //get MVVM components
         val repository = (requireActivity().application as TodoApplication).repository
-        val factory = TagSelectionViewModelFactory(repository)
+        val factory = TagSelectionViewModel.TagSelectionViewModelFactory(repository)
         tagSelectionViewModel = ViewModelProvider(this, factory)[TagSelectionViewModel::class.java]
 
         //if editing a taskItem

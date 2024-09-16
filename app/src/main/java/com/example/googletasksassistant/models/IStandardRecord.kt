@@ -1,5 +1,6 @@
 package com.example.googletasksassistant.models
 
-interface IRecordWithID {
+interface IStandardRecord {
     var id: Int
+    var name: String
 }

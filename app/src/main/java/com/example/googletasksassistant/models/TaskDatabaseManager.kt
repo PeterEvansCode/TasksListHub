@@ -324,6 +324,28 @@ class TaskDatabaseManager(private val context: Context) {
         tasks.values.toMutableList()
     }
 
+    suspend fun getAllTags(): MutableList<TaskTag> = withContext(Dispatchers.IO)
+    {
+        //run query
+        val query = "SELECT * FROM $TAGS_TABLE"
+        val cursor = database.rawQuery(query, null)
+
+        //read all tags
+        val tags = mutableListOf<TaskTag>()
+        cursor.use {
+            while (cursor.moveToNext()) {
+                val tagID = cursor.getInt(cursor.getColumnIndexOrThrow(TAG_ID))
+                val name = cursor.getString(cursor.getColumnIndexOrThrow(TAG_NAME))
+                val description = cursor.getString(cursor.getColumnIndexOrThrow(TAG_DESC))
+
+                tags.add(TaskTag(id = tagID, name = name, desc = description))
+            }
+        }
+
+        //return tags
+        tags
+    }
+
     private fun getTags (taskIDs: Set<Int>): MutableList<Pair<Int, TaskTag>>{
         val tags = mutableListOf<Pair<Int, TaskTag>>() // Pair of taskId and Tag
 

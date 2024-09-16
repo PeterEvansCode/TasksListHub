@@ -3,6 +3,8 @@ package com.example.googletasksassistant.TagSelectionFragment
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +12,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.fragment.app.viewModels
 import com.example.googletasksassistant.NewTagSheet
-import com.example.googletasksassistant.NewTaskSheet
 import com.example.googletasksassistant.TaskTagAdapter
 import com.example.googletasksassistant.TodoApplication
 import com.example.googletasksassistant.databinding.FragmentTagSelectionBinding
@@ -28,7 +29,7 @@ class TagSelectionFragment(var taskItem: TaskItem) : DialogFragment(), ITaskTagC
     private val _tagsToRemove: HashOnID<TaskTag> = HashOnID()
 
     private val tagSelectionViewModel: TagSelectionViewModel by viewModels{
-        TagSelectionViewModelFactory((requireActivity().application as TodoApplication).repository)
+        TagSelectionViewModel.TagSelectionViewModelFactory((requireActivity().application as TodoApplication).repository)
     }
 
     override fun onCreateView(
@@ -59,6 +60,17 @@ class TagSelectionFragment(var taskItem: TaskItem) : DialogFragment(), ITaskTagC
             // Display sheet to create new tag
             NewTagSheet(null).show(parentFragmentManager, "newTaskTag")
         }
+
+        // save button is disabled while no title has been entered
+        _binding!!.tagSearchBar.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                tagSelectionViewModel.searchForTags(_binding!!.tagSearchBar.text.toString())
+            }
+
+            //necessary overrides (no functionality)
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable?) {}
+        })
 
         setRecyclerView()
     }
