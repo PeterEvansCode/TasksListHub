@@ -1,28 +1,14 @@
 package com.example.googletasksassistant
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.example.googletasksassistant.AboutFragment
-import com.example.googletasksassistant.MainTaskListFragment
-import com.example.googletasksassistant.R
-import com.example.googletasksassistant.SettingsFragment
 import com.example.googletasksassistant.databinding.ActivityMainBinding
-import com.example.googletasksassistant.databinding.FragmentMainTaskListBinding
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -63,7 +49,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun setMenuBindings(){
-        menuViewModel.taskTags.observe(this, Observer {
+        menuViewModel.allTaskTags.observe(this, Observer {
             val menu = binding.navView.menu
 
             // First, clear any previous dynamic items in the middle group
@@ -92,16 +78,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_home -> supportFragmentManager.beginTransaction()
+            R.id.nav_home ->
+                supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, MainTaskListFragment()).commit()
 
-            R.id.nav_about -> supportFragmentManager.beginTransaction()
+            R.id.nav_about ->
+                supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, AboutFragment()).commit()
 
-            R.id.nav_settings -> supportFragmentManager.beginTransaction()
+            R.id.nav_settings -> 
+                supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, SettingsFragment()).commit()
 
-            R.id.nav_deleted -> Toast.makeText(this, "previously deleted", Toast.LENGTH_SHORT)
+            R.id.nav_deleted_tasks ->
+                Toast.makeText(this, "previously deleted tasks", Toast.LENGTH_SHORT)
+                .show()
+
+            R.id.nav_deleted_tags ->
+                Toast.makeText(this, "previously deleted tasks", Toast.LENGTH_SHORT)
                 .show()
         }
 

@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TagSelectionViewModel(private val repository: TaskItemRepository) : ViewModel() {
-    var taskTags: LiveData<List<TaskTag>> = repository.tagsLiveData
+    var taskTags: LiveData<List<TaskTag>> = repository.filteredTagsLiveData
 
     fun addTaskTag(newTag: TaskTag) = viewModelScope.launch(Dispatchers.IO) {
         repository.addTaskTag(newTag)

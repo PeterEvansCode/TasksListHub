@@ -2,18 +2,12 @@
     android:width="24dp"
     android:height="24dp"
     android:viewportWidth="24"
-    android:viewportHeight="24">
+    android:viewportHeight="24"
+    android:tint="#000000">
 
-    <!-- Outer tag shape -->
+    <!-- Rectangle with a triangle cutout on the right side -->
     <path
-        android:fillColor="#FF000000"
-        android:pathData="M19.43,3.34L12.66,3.34L4.57,11.43C4.21,11.79 4.21,12.38 4.57,12.74L12.57,20.74C12.93,21.1 13.53,21.1 13.89,20.74L21.89,12.74C22.25,12.38 22.25,11.79 21.89,11.43L19.43,8.97L19.43,3.34zM16.5,6.5C17.33,6.5 18,7.17 18,8C18,8.83 17.33,9.5 16.5,9.5C15.67,9.5 15,8.83 15,8C15,7.17 15.67,6.5 16.5,6.5z"
+        android:fillColor="@color/white"
+        android:pathData="M4,7 L16,7 L21,12 L16,17 L4,17 L4,7 Z"
         android:fillType="nonZero" />
-
-    <!-- Hole in the tag -->
-    <circle
-        android:fillColor="#FFFFFFFF"
-        android:cx="16.5"
-        android:cy="8"
-        android:r="1" />
 </vector>

@@ -1,6 +1,5 @@
 package com.example.googletasksassistant
 
-import android.location.Criteria
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -12,7 +11,7 @@ import java.time.LocalDate
 
 class TaskViewModel(private val repository: TaskItemRepository) : ViewModel()
 {
-    var taskItems: LiveData<List<TaskItem>> = repository.tasksLiveData
+    var taskItems: LiveData<List<TaskItem>> = repository.filteredTasksLiveData
 
     fun addTaskItem(newTask: TaskItem) = viewModelScope.launch(Dispatchers.IO) {
         repository.addTaskItem(newTask)

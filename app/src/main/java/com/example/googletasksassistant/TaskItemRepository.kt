@@ -17,13 +17,21 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
 
     //makes all taskTags visible to the UI
     private val _taskTagStore = RecordStore<TaskTag>()
-    private val _tagsLiveData = MutableLiveData<List<TaskTag>>()
-    val tagsLiveData: LiveData<List<TaskTag>> get() = _tagsLiveData
+
+    //display search results
+    private val _filteredTagsLiveData = MutableLiveData<List<TaskTag>>()
+    val filteredTagsLiveData: LiveData<List<TaskTag>> get() = _filteredTagsLiveData
+
+    //display all tags
+    private val _allTagsLiveData = MutableLiveData<List<TaskTag>>()
+    val allTagsLiveData: LiveData<List<TaskTag>> get() = _filteredTagsLiveData
 
     //makes all taskItems visible to the UI
     private val _taskItemStore = RecordStore<TaskItem>()
-    private val _tasksLiveData = MutableLiveData<List<TaskItem>>()
-    val tasksLiveData: LiveData<List<TaskItem>> get() = _tasksLiveData
+
+    //display task search results
+    private val _filteredTasksLiveData = MutableLiveData<List<TaskItem>>()
+    val filteredTasksLiveData: LiveData<List<TaskItem>> get() = _filteredTasksLiveData
 
     // Coroutine scope for background tasks
     private val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
@@ -38,29 +46,63 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
     }
 
     @WorkerThread
+    private suspend fun loadTasks(){
+        val currentList = db.getAllTasks()
+        _taskItemStore.add(currentList)
+        _filteredTasksLiveData.postValue(_taskItemStore.getFiltered())
+    }
+
+    @WorkerThread
+    private suspend fun loadTags(){
+        val currentList = db.getAllTags()
+        _taskTagStore.add(currentList)
+        _filteredTagsLiveData.postValue(_taskTagStore.getFiltered())
+    }
+
+    @WorkerThread
     suspend fun addTaskItem(taskItem: TaskItem)
     {
         val taskItemWithId = db.insertTask(taskItem)
-        addTaskToLocalList(taskItemWithId)
+        _taskItemStore.add(taskItemWithId)
+        postTaskValues()
     }
 
     @WorkerThread
     suspend fun addTaskTag(taskTag: TaskTag)
     {
         val taskTagWithId = db.insertTag(taskTag)
-        addTagToLocalList(taskTagWithId)
+        _taskTagStore.add(taskTagWithId)
+        postTagValues()
+    }
+
+    @WorkerThread
+    suspend fun deleteTaskItem(taskItem: TaskItem)
+    {
+        db.deleteTask(taskItem)
+        _taskItemStore.remove(taskItem)
+        postTaskValues()
+    }
+
+    @WorkerThread
+    suspend fun deleteTaskTag(taskTag: TaskTag)
+    {
+        db.deleteTag(taskTag)
+        _taskTagStore.remove(taskTag)
+        postTagValues()
     }
 
     @WorkerThread
     suspend fun editTaskItem(taskItem: TaskItem)
     {
         db.updateTask(taskItem)
+        postTaskValues()
     }
 
     @WorkerThread
     suspend fun editTaskTag(taskTag: TaskTag)
     {
         db.updateTag(taskTag)
+        postTagValues()
     }
 
     @WorkerThread
@@ -71,6 +113,9 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
 
         //update database
         db.insertTaskTagRelations(taskItem, taskTags)
+
+        //notify observers of change
+        postTaskValues()
 
         return taskItem
     }
@@ -84,65 +129,28 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
         //update database
         db.deleteTaskTagRelations(taskItem, taskTags)
 
+        //notify observers of change
+        postTaskValues()
+
         return taskItem
-    }
-
-    @WorkerThread
-    suspend fun deleteTaskItem(taskItem: TaskItem)
-    {
-        db.deleteTask(taskItem)
-        removeTaskFromLocalList(taskItem)
-    }
-
-    @WorkerThread
-    suspend fun deleteTaskTag(taskTag: TaskTag)
-    {
-        db.deleteTag(taskTag)
-        removeTagFromLocalList(taskTag)
-    }
-
-    @WorkerThread
-    private suspend fun loadTasks(){
-        val currentList = db.getAllTasks()
-        _taskItemStore.add(currentList)
-        _tasksLiveData.postValue(_taskItemStore.getFiltered())
-    }
-
-    @WorkerThread
-    private suspend fun loadTags(){
-        val currentList = db.getAllTags()
-        _taskTagStore.add(currentList)
-        _tagsLiveData.postValue(_taskTagStore.getFiltered())
     }
 
     fun applyTaskSearchFilter(criteria: String){
         _taskItemStore.applySearchFilter(criteria)
-        _tasksLiveData.postValue(_taskItemStore.getFiltered())
+        _filteredTasksLiveData.postValue(_taskItemStore.getFiltered())
     }
 
     fun applyTagSearchFilter(criteria: String){
         _taskTagStore.applySearchFilter(criteria)
-        _tagsLiveData.postValue(_taskTagStore.getFiltered())
+        _filteredTagsLiveData.postValue(_taskTagStore.getFiltered())
     }
 
-    //store functions
-    private fun addTaskToLocalList(taskItem: TaskItem) {
-        _taskItemStore.add(taskItem)
-        _tasksLiveData.postValue(_taskItemStore.getFiltered())
+    private fun postTaskValues(){
+        _filteredTasksLiveData.postValue(_taskItemStore.getFiltered())
     }
 
-    private fun addTagToLocalList(taskTag: TaskTag) {
-        _taskTagStore.add(taskTag)
-        _tagsLiveData.postValue(_taskTagStore.getFiltered())
-    }
-
-    private fun removeTaskFromLocalList(taskItem: TaskItem) {
-        _taskItemStore.remove(taskItem)
-        _tasksLiveData.postValue(_taskItemStore.getFiltered())
-    }
-
-    private fun removeTagFromLocalList(taskTag: TaskTag) {
-        _taskTagStore.remove(taskTag)
-        _tagsLiveData.postValue(_taskTagStore.getFiltered())
+    private fun postTagValues(){
+        _allTagsLiveData.postValue(_taskTagStore.getAll())
+        _filteredTagsLiveData.postValue(_taskTagStore.getFiltered())
     }
 }

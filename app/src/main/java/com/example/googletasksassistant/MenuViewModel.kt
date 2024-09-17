@@ -1,19 +1,13 @@
 package com.example.googletasksassistant
 
-import android.location.Criteria
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
-import com.example.googletasksassistant.models.TaskItem
 import com.example.googletasksassistant.models.TaskTag
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 class MenuViewModel(private val repository: TaskItemRepository) : ViewModel()
 {
-    var taskTags: LiveData<List<TaskTag>> = repository.tagsLiveData
+    var allTaskTags: LiveData<List<TaskTag>> = repository.allTagsLiveData
 
 }
 
