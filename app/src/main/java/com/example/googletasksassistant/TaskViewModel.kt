@@ -1,5 +1,6 @@
 package com.example.googletasksassistant
 
+import android.location.Criteria
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -35,6 +36,10 @@ class TaskViewModel(private val repository: TaskItemRepository) : ViewModel()
 
     fun deleteTaskItem(taskItem: TaskItem)= viewModelScope.launch(Dispatchers.IO) {
         repository.deleteTaskItem(taskItem)
+    }
+
+    fun searchForTask(criteria: String){
+        repository.applyTaskSearchFilter(criteria)
     }
 }
 

@@ -61,7 +61,7 @@ class TagSelectionFragment(var taskItem: TaskItem) : DialogFragment(), ITaskTagC
             NewTagSheet(null).show(parentFragmentManager, "newTaskTag")
         }
 
-        // save button is disabled while no title has been entered
+        // search bar
         _binding!!.tagSearchBar.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 tagSelectionViewModel.searchForTags(_binding!!.tagSearchBar.text.toString())
