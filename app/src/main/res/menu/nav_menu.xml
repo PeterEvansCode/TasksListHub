@@ -5,7 +5,8 @@
     tools:showIn="navigation_view">
 
     <group
-        android:checkableBehavior="single">
+        android:checkableBehavior="single"
+        android:id="@+id/group_top">
 
         <item
             android:id="@+id/nav_home"
@@ -18,25 +19,25 @@
             android:title="Settings"/>
 
         <item
-            android:id="@+id/nav_deleted"
-            android:icon="@drawable/baseline_delete_24"
-            android:title="Previously Deleted"/>
-
-        <item
             android:id="@+id/nav_about"
             android:icon="@drawable/baseline_info_24"
             android:title="About Us"/>
     </group>
 
-    <item
-        android:title="">
+    <group
+        android:checkableBehavior="single"
+        android:id="@+id/group_bottom">
 
-        <menu>
-            <item
-                android:id="@+id/nav_logout"
-                android:icon="@drawable/baseline_home_24"
-                android:title="Logout"/>
-        </menu>
-    </item>
+        <item
+            android:id="@+id/nav_deleted_tasks"
+            android:icon="@drawable/baseline_delete_24"
+            android:title="Recently Deleted Tasks"/>
+
+        <item
+            android:id="@+id/nav_deleted_tags"
+            android:icon="@drawable/baseline_delete_24"
+            android:title="Previously Deleted Tags"/>
+
+    </group>
 
 </menu>

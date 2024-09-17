@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -15,6 +16,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.example.googletasksassistant.AboutFragment
 import com.example.googletasksassistant.MainTaskListFragment
 import com.example.googletasksassistant.R
@@ -26,6 +28,11 @@ import com.google.android.material.navigation.NavigationView
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
+
+    // Assign viewModel
+    private val menuViewModel: MenuViewModel by viewModels {
+        MenuModelFactory((application as TodoApplication).repository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +56,33 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         })
 
+        setMenuBindings()
+
         //load main fragment
+        loadInitialFragment(savedInstanceState)
+    }
+
+    private fun setMenuBindings(){
+        menuViewModel.taskTags.observe(this, Observer {
+            val menu = binding.navView.menu
+
+            // First, clear any previous dynamic items in the middle group
+            menu.removeGroup(R.id.group_dynamic)
+
+            // Add the new dynamic items in the middle of the menu
+            val dynamicGroupId = R.id.group_dynamic  // This group ID must be defined in `ids.xml`
+            it.forEachIndexed { index, tag ->
+                menu.add(dynamicGroupId, index, index, tag.name).apply {
+                    icon = getDrawable(R.drawable.ic_tag)  // Optional: Set an icon for dynamic items
+                }
+            }
+
+            // Invalidate the menu to refresh
+            binding.navView.invalidate()
+        })
+    }
+
+    private fun loadInitialFragment(savedInstanceState: Bundle?){
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, MainTaskListFragment()).commit()
