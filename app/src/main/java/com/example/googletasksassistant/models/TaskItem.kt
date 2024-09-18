@@ -1,19 +1,21 @@
-package com.example.googletasksassistant
+package com.example.googletasksassistant.models
 
 import android.content.Context
 import androidx.core.content.ContextCompat
+import com.example.googletasksassistant.R
+import com.example.googletasksassistant.models.taskStores.HashOnID
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 class TaskItem(
-    var id: Int = 0,
-    var name: String,
-    var desc: String,
-    var dueTimeString: String?,
-    var completedDateString: String?,
-    var tags: MutableList<String> = mutableListOf()
-)
+    override var id: Int = 0,
+    override var name: String,
+    var desc: String = "",
+    var dueTimeString: String? = null,
+    var completedDateString: String? = null,
+    var tags: HashOnID<TaskTag> = HashOnID()
+) : IStandardRecord
 {
     //converts completedDateString into a LocalDate type
     fun formatCompletedDate(): LocalDate? = if (completedDateString == null) null

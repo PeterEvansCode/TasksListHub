@@ -1,18 +1,26 @@
 package com.example.googletasksassistant
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.googletasksassistant.TagSelectionFragment.TagSelectionFragment
 import com.example.googletasksassistant.databinding.FragmentMainTaskListBinding
+import com.example.googletasksassistant.models.TaskItem
+import com.example.googletasksassistant.models.TaskTag
 
-class MainTaskListFragment : Fragment(), TaskItemClickListener {
+class MainTaskListFragment(
+    private val tagFilter: TaskTag? = null
+) : Fragment(), ITaskItemClickListener {
 
-    private var _binding: FragmentMainTaskListBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentMainTaskListBinding
 
     // Assign viewModel
     private val taskViewModel: TaskViewModel by viewModels {
@@ -22,8 +30,8 @@ class MainTaskListFragment : Fragment(), TaskItemClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentMainTaskListBinding.inflate(inflater, container, false)
+    ): View {
+        binding = FragmentMainTaskListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -33,24 +41,51 @@ class MainTaskListFragment : Fragment(), TaskItemClickListener {
         // Bind newTaskButton
         binding.newTaskButton.setOnClickListener {
             // Display sheet to create new task
-            NewTaskSheet(null).show(parentFragmentManager, "newTaskTag")
+            NewTaskSheet(null, tagFilter).show(parentFragmentManager, "newTaskItem")
         }
+
+        // Bind toolbar with activity's drawer layout
+        (activity as? AppCompatActivity)?.let { appCompatActivity ->
+            val drawerLayout = appCompatActivity.findViewById<DrawerLayout>(R.id.drawer_layout)
+            binding.taskToolbar.bindWithDrawerLayout(appCompatActivity, drawerLayout)
+        }
+
         setRecyclerView()
+        setSearchBar()
     }
 
     private fun setRecyclerView() {
         var mainTaskListFragment = this
         taskViewModel.taskItems.observe(viewLifecycleOwner) {
+
+            //if inside a tag folder, only show tasks relating to that tag
+            var tasksToDisplay = it
+            if (tagFilter != null) tasksToDisplay = it.filter { item -> item.tags.containsKey(tagFilter.id) }
+
+            //dipslay tasks
             binding.todoListRecyclerView.apply {
                 layoutManager = LinearLayoutManager(context)
-                adapter = TaskItemAdapter(it, mainTaskListFragment)
+                adapter = TaskItemAdapter(tasksToDisplay, mainTaskListFragment)
             }
         }
     }
 
+    private fun setSearchBar(){
+        // search bar
+        binding.taskSearchBar.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                taskViewModel.searchForTask(binding.taskSearchBar.text.toString())
+            }
+
+            //necessary overrides (no functionality)
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
     override fun editTaskItem(taskItem: TaskItem) {
         // Edit task if it is not already completed
-        if (!taskItem.isCompleted()) NewTaskSheet(taskItem).show(parentFragmentManager, "newTaskTag")
+        if (!taskItem.isCompleted()) NewTaskSheet(taskItem, tagFilter).show(parentFragmentManager, "newTaskTag")
     }
 
     // Toggles task between complete and incomplete
@@ -66,8 +101,13 @@ class MainTaskListFragment : Fragment(), TaskItemClickListener {
         taskViewModel.deleteTaskItem(taskItem)
     }
 
+    override fun openTaskTagMenu(taskItem: TaskItem) {
+        val tagSelectionFragment = TagSelectionFragment(taskItem)
+        tagSelectionFragment.show(requireActivity().supportFragmentManager, "TagSelectionFragment")
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        binding.taskToolbar.cleanUp()
     }
 }

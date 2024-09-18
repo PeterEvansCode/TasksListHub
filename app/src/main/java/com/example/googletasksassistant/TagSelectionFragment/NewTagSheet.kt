@@ -8,21 +8,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.example.googletasksassistant.TagSelectionFragment.TagSelectionViewModel
+import com.example.googletasksassistant.databinding.FragmentNewTagSheetBinding
 import com.example.googletasksassistant.databinding.FragmentNewTaskSheetBinding
 import com.example.googletasksassistant.models.TaskItem
 import com.example.googletasksassistant.models.TaskTag
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.time.LocalTime
 
-class NewTaskSheet(
-    val taskItem: TaskItem? = null,
-    val taskTag: TaskTag? = null
-) : BottomSheetDialogFragment() {
+class NewTagSheet(var taskTag: TaskTag?) : BottomSheetDialogFragment() {
 
     //link using MVVM
-    private var _binding: FragmentNewTaskSheetBinding? = null
+    private var _binding: FragmentNewTagSheetBinding? = null
     private val binding get() = _binding!!
-    private lateinit var taskViewModel: TaskViewModel
+
+    private lateinit var tagSelectionViewModel: TagSelectionViewModel
 
     //task dueTime
     private var dueTime: LocalTime? = null
@@ -33,7 +33,7 @@ class NewTaskSheet(
         savedInstanceState: Bundle?
     ): View {
         //generate view
-        _binding = FragmentNewTaskSheetBinding.inflate(inflater, container, false)
+        _binding = FragmentNewTagSheetBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -43,36 +43,29 @@ class NewTaskSheet(
 
         //get MVVM components
         val repository = (requireActivity().application as TodoApplication).repository
-        val factory = TaskItemModelFactory(repository)
-        taskViewModel = ViewModelProvider(this, factory)[TaskViewModel::class.java]
+        val factory = TagSelectionViewModel.TagSelectionViewModelFactory(repository)
+        tagSelectionViewModel = ViewModelProvider(this, factory)[TagSelectionViewModel::class.java]
 
         //if editing a taskItem
-        if (taskItem != null) {
+        if (taskTag != null) {
             //display data relevant to the task
-            binding.taskTitle.text = "Edit Task"
-            binding.name.text = Editable.Factory.getInstance().newEditable(taskItem.name)
-            binding.desc.text = Editable.Factory.getInstance().newEditable(taskItem.desc)
-            taskItem.formatDueTime()?.let {
-                dueTime = it
-                updateTimeButtonText()
-            }
+            binding.taskTitle.text = "Edit Tag"
+            binding.name.text = Editable.Factory.getInstance().newEditable(taskTag!!.name)
+            binding.desc.text = Editable.Factory.getInstance().newEditable(taskTag!!.desc)
         }
 
         //if creating a new task item
         else {
-            binding.taskTitle.text = "New Task"
+            binding.taskTitle.text = "New Tag"
         }
 
         //button bindings
         binding.saveButton.setOnClickListener {
             saveAction()
         }
-        binding.timePickerButton.setOnClickListener {
-            openTimePicker()
-        }
-        updateSaveButtonState()
 
         // save button is disabled while no title has been entered
+        updateSaveButtonState()
         binding.name.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 updateSaveButtonState()
@@ -84,34 +77,6 @@ class NewTaskSheet(
         })
     }
 
-    private fun openTimePicker() {
-        //if no current due time, set time picker to default value
-        if (dueTime == null)
-            dueTime = LocalTime.now()
-
-        //when time is selected
-        val listener = TimePickerDialog.OnTimeSetListener { _, selectedHour, selectedMinute ->
-            //set due time
-            dueTime = LocalTime.of(selectedHour, selectedMinute)
-
-            //update UI
-            updateTimeButtonText()
-        }
-
-        val dialog = TimePickerDialog(
-            requireContext(), listener,
-            dueTime!!.hour, dueTime!!.minute, true
-        )
-
-        //display time picker
-        dialog.setTitle("Task Due")
-        dialog.show()
-    }
-
-    private fun updateTimeButtonText() {
-        binding.timePickerButton.text = String.format("%02d:%02d", dueTime!!.hour, dueTime!!.minute)
-    }
-
     private fun saveAction() {
         //save data from sheet
         val name = binding.name.text.toString()
@@ -119,20 +84,16 @@ class NewTaskSheet(
         val dueTimeString = dueTime?.let { TaskItem.timeFormatter.format(it) }
 
         //create new task item if one doesn't already exist
-        if (taskItem == null) {
-            val newTask = TaskItem(name = name, desc = desc, dueTimeString = dueTimeString)
-            taskViewModel.addTaskItem(newTask)
-
-            //add tag if currently in a tag folder
-            if (taskTag != null) taskViewModel.addTagsToTask(newTask, taskTag)
+        if (taskTag == null) {
+            val newTag = TaskTag(name = name, desc = desc)
+            tagSelectionViewModel.addTaskTag(newTag)
         }
 
         //save data in taskItem
         else {
-            taskItem.name = name
-            taskItem.desc = desc
-            taskItem.dueTimeString = dueTimeString
-            taskViewModel.updateTaskItem(taskItem!!)
+            taskTag!!.name = name
+            taskTag!!.desc = desc
+            tagSelectionViewModel.editTaskTag(taskTag!!)
         }
 
         //reset sheet

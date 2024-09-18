@@ -1,78 +1,116 @@
 package com.example.googletasksassistant
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.activity.viewModels
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.example.googletasksassistant.databinding.ActivityMainBinding
-import com.example.googletasksassistant.databinding.FragmentMainTaskListBinding
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var drawerLayout: DrawerLayout
     private lateinit var binding: ActivityMainBinding
+
+    // Assign viewModel
+    private val menuViewModel: MenuViewModel by viewModels {
+        MenuModelFactory((application as TodoApplication).repository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
+        // Initialize binding
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
+        //set nav view
+        binding.navView.setNavigationItemSelectedListener(this)
 
-        val navigationView = findViewById<NavigationView>(R.id.nav_view)
-        navigationView.setNavigationItemSelectedListener(this)
-
-        val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav)
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-
-        // Register an OnBackPressedCallback to handle the back press
+        // Handle back press to close drawer if open
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    drawerLayout.closeDrawer(GravityCompat.START)
+                if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
                 } else {
-                    // If the drawer isn't open, proceed with the normal back press
-                    isEnabled = false  // Disable this callback so the system can handle the back press
+                    isEnabled = false
                     onBackPressedDispatcher.onBackPressed()
                 }
             }
         })
 
-        if (savedInstanceState == null){
+        setMenuBindings()
+
+        //load main fragment
+        loadInitialFragment(savedInstanceState)
+    }
+
+    private fun setMenuBindings(){
+        menuViewModel.allTaskTags.observe(this, Observer { taskTags ->
+            val menu = binding.navView.menu
+
+            // First, clear any previous dynamic items in the middle group
+            menu.removeGroup(R.id.group_tag_menu_items)
+
+            taskTags.sortedBy{it.name}.forEachIndexed { index, tag ->
+                menu.add(
+                    R.id.group_tag_menu_items, //add to the tag menu group
+                    tag.id, //itemId = tagId for easy lookup
+                    index, //sort alphabetically
+                    tag.name //name of menu item
+                ).apply {
+                    //apply icon
+                   @DrawableRes
+                   icon = this@MainActivity.getDrawable(R.drawable.ic_tag)
+                }
+            }
+
+            // Invalidate the menu to refresh
+            binding.navView.invalidate()
+        })
+    }
+
+    private fun loadInitialFragment(savedInstanceState: Bundle?){
+        if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, MainTaskListFragment()).commit()
-            navigationView.setCheckedItem(R.id.nav_home)
+            binding.navView.setCheckedItem(R.id.nav_home)
         }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            R.id.nav_home -> supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, MainTaskListFragment()).commit()
-
-            R.id.nav_about -> supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, AboutFragment()).commit()
-
-            R.id.nav_settings -> supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, SettingsFragment()).commit()
-
-            R.id.nav_deleted -> Toast.makeText(this, "previously deleted", Toast.LENGTH_SHORT)
-                .show()
+        if (item.groupId == R.id.group_tag_menu_items) {
+            val selectedTag = menuViewModel.getTaskTag(item.itemId)
+            openFragment(MainTaskListFragment(selectedTag))
         }
+        else {
+            when (item.itemId) {
+                R.id.nav_home -> openFragment(MainTaskListFragment())
 
-        drawerLayout.closeDrawer(GravityCompat.START)
+                R.id.nav_about -> openFragment(AboutFragment())
+
+                R.id.nav_settings -> openFragment(SettingsFragment())
+
+                R.id.nav_deleted_tasks ->
+                    Toast.makeText(this, "previously deleted tasks", Toast.LENGTH_SHORT)
+                        .show()
+
+                R.id.nav_deleted_tags ->
+                    Toast.makeText(this, "previously deleted tasks", Toast.LENGTH_SHORT)
+                        .show()
+            }
+        }
+        binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun openFragment(fragment: Fragment){
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment).commit()
     }
 }

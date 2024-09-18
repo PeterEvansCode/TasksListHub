@@ -1,8 +1,11 @@
 package com.example.googletasksassistant
 
-interface TaskItemClickListener
+import com.example.googletasksassistant.models.TaskItem
+
+interface ITaskItemClickListener
 {
     fun editTaskItem(taskItem: TaskItem)
     fun toggleCompleteTaskItem(taskItem: TaskItem)
     fun deleteTaskItem(taskItem: TaskItem)
+    fun openTaskTagMenu(taskItem: TaskItem)
 }
