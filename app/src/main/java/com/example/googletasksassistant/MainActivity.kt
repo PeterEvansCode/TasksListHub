@@ -5,8 +5,10 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.example.googletasksassistant.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
@@ -49,17 +51,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun setMenuBindings(){
-        menuViewModel.allTaskTags.observe(this, Observer {
+        menuViewModel.allTaskTags.observe(this, Observer { taskTags ->
             val menu = binding.navView.menu
 
             // First, clear any previous dynamic items in the middle group
-            menu.removeGroup(R.id.group_dynamic)
+            menu.removeGroup(R.id.group_tag_menu_items)
 
-            // Add the new dynamic items in the middle of the menu
-            val dynamicGroupId = R.id.group_dynamic  // This group ID must be defined in `ids.xml`
-            it.forEachIndexed { index, tag ->
-                menu.add(dynamicGroupId, index, index, tag.name).apply {
-                    icon = getDrawable(R.drawable.ic_tag)  // Optional: Set an icon for dynamic items
+            taskTags.sortedBy{it.name}.forEachIndexed { index, tag ->
+                menu.add(
+                    R.id.group_tag_menu_items, //add to the tag menu group
+                    tag.id, //itemId = tagId for easy lookup
+                    index, //sort alphabetically
+                    tag.name //name of menu item
+                ).apply {
+                    //apply icon
+                   @DrawableRes
+                   icon = this@MainActivity.getDrawable(R.drawable.ic_tag)
                 }
             }
 
@@ -77,29 +84,33 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.nav_home ->
-                supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, MainTaskListFragment()).commit()
-
-            R.id.nav_about ->
-                supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, AboutFragment()).commit()
-
-            R.id.nav_settings -> 
-                supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, SettingsFragment()).commit()
-
-            R.id.nav_deleted_tasks ->
-                Toast.makeText(this, "previously deleted tasks", Toast.LENGTH_SHORT)
-                .show()
-
-            R.id.nav_deleted_tags ->
-                Toast.makeText(this, "previously deleted tasks", Toast.LENGTH_SHORT)
-                .show()
+        if (item.groupId == R.id.group_tag_menu_items) {
+            val selectedTag = menuViewModel.getTaskTag(item.itemId)
+            openFragment(MainTaskListFragment(selectedTag))
         }
+        else {
+            when (item.itemId) {
+                R.id.nav_home -> openFragment(MainTaskListFragment())
 
+                R.id.nav_about -> openFragment(AboutFragment())
+
+                R.id.nav_settings -> openFragment(SettingsFragment())
+
+                R.id.nav_deleted_tasks ->
+                    Toast.makeText(this, "previously deleted tasks", Toast.LENGTH_SHORT)
+                        .show()
+
+                R.id.nav_deleted_tags ->
+                    Toast.makeText(this, "previously deleted tasks", Toast.LENGTH_SHORT)
+                        .show()
+            }
+        }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun openFragment(fragment: Fragment){
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment).commit()
     }
 }

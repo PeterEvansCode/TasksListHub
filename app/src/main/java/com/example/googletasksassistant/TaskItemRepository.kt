@@ -58,6 +58,14 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
         _taskTagStore.add(currentList)
         _filteredTagsLiveData.postValue(_taskTagStore.getFiltered())
     }
+    
+    fun getTag(tagID: Int): TaskTag?{
+        return _taskTagStore.get(tagID)
+    }
+
+    fun getTask(taskID: Int): TaskItem?{
+        return _taskItemStore.get(taskID)
+    }
 
     @WorkerThread
     suspend fun addTaskItem(taskItem: TaskItem)

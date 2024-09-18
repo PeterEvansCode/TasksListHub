@@ -10,10 +10,14 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.googletasksassistant.databinding.FragmentNewTaskSheetBinding
 import com.example.googletasksassistant.models.TaskItem
+import com.example.googletasksassistant.models.TaskTag
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.time.LocalTime
 
-class NewTaskSheet(var taskItem: TaskItem?) : BottomSheetDialogFragment() {
+class NewTaskSheet(
+    val taskItem: TaskItem? = null,
+    val taskTag: TaskTag? = null
+) : BottomSheetDialogFragment() {
 
     //link using MVVM
     private var _binding: FragmentNewTaskSheetBinding? = null
@@ -46,9 +50,9 @@ class NewTaskSheet(var taskItem: TaskItem?) : BottomSheetDialogFragment() {
         if (taskItem != null) {
             //display data relevant to the task
             binding.taskTitle.text = "Edit Task"
-            binding.name.text = Editable.Factory.getInstance().newEditable(taskItem!!.name)
-            binding.desc.text = Editable.Factory.getInstance().newEditable(taskItem!!.desc)
-            taskItem!!.formatDueTime()?.let {
+            binding.name.text = Editable.Factory.getInstance().newEditable(taskItem.name)
+            binding.desc.text = Editable.Factory.getInstance().newEditable(taskItem.desc)
+            taskItem.formatDueTime()?.let {
                 dueTime = it
                 updateTimeButtonText()
             }
@@ -118,13 +122,16 @@ class NewTaskSheet(var taskItem: TaskItem?) : BottomSheetDialogFragment() {
         if (taskItem == null) {
             val newTask = TaskItem(name = name, desc = desc, dueTimeString = dueTimeString)
             taskViewModel.addTaskItem(newTask)
+
+            //add tag if currently in a tag folder
+            if (taskTag != null) taskViewModel.addTagsToTask(newTask, taskTag)
         }
 
         //save data in taskItem
         else {
-            taskItem!!.name = name
-            taskItem!!.desc = desc
-            taskItem!!.dueTimeString = dueTimeString
+            taskItem.name = name
+            taskItem.desc = desc
+            taskItem.dueTimeString = dueTimeString
             taskViewModel.updateTaskItem(taskItem!!)
         }
 

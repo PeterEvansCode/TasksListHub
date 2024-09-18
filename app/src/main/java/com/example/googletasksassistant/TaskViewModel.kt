@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.googletasksassistant.models.TaskItem
+import com.example.googletasksassistant.models.TaskTag
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -40,6 +41,20 @@ class TaskViewModel(private val repository: TaskItemRepository) : ViewModel()
     fun searchForTask(criteria: String){
         repository.applyTaskSearchFilter(criteria)
     }
+
+    fun addTagsToTask(taskItem: TaskItem, taskTags: List<TaskTag>) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addTagsToTask(taskItem, taskTags)
+        }
+
+    fun addTagsToTask(taskItem: TaskItem, taskTag: TaskTag) = addTagsToTask(taskItem, listOf(taskTag))
+
+    fun removeTagsFromTask(taskItem: TaskItem, taskTags: List<TaskTag>) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.removeTagsFromTask(taskItem, taskTags)
+        }
+
+    fun removeTagsFromTask(taskItem: TaskItem, taskTag: TaskTag) = removeTagsFromTask(taskItem, listOf(taskTag))
 }
 
 class TaskItemModelFactory(private val repository: TaskItemRepository): ViewModelProvider.Factory

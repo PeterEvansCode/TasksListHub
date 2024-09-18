@@ -14,8 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.googletasksassistant.TagSelectionFragment.TagSelectionFragment
 import com.example.googletasksassistant.databinding.FragmentMainTaskListBinding
 import com.example.googletasksassistant.models.TaskItem
+import com.example.googletasksassistant.models.TaskTag
 
-class MainTaskListFragment : Fragment(), ITaskItemClickListener {
+class MainTaskListFragment(
+    private val tagFilter: TaskTag? = null
+) : Fragment(), ITaskItemClickListener {
 
     private lateinit var binding: FragmentMainTaskListBinding
 
@@ -38,7 +41,7 @@ class MainTaskListFragment : Fragment(), ITaskItemClickListener {
         // Bind newTaskButton
         binding.newTaskButton.setOnClickListener {
             // Display sheet to create new task
-            NewTaskSheet(null).show(parentFragmentManager, "newTaskItem")
+            NewTaskSheet(null, tagFilter).show(parentFragmentManager, "newTaskItem")
         }
 
         // Bind toolbar with activity's drawer layout
@@ -54,9 +57,15 @@ class MainTaskListFragment : Fragment(), ITaskItemClickListener {
     private fun setRecyclerView() {
         var mainTaskListFragment = this
         taskViewModel.taskItems.observe(viewLifecycleOwner) {
+
+            //if inside a tag folder, only show tasks relating to that tag
+            var tasksToDisplay = it
+            if (tagFilter != null) tasksToDisplay = it.filter { item -> item.tags.containsKey(tagFilter.id) }
+
+            //dipslay tasks
             binding.todoListRecyclerView.apply {
                 layoutManager = LinearLayoutManager(context)
-                adapter = TaskItemAdapter(it, mainTaskListFragment)
+                adapter = TaskItemAdapter(tasksToDisplay, mainTaskListFragment)
             }
         }
     }
@@ -76,7 +85,7 @@ class MainTaskListFragment : Fragment(), ITaskItemClickListener {
 
     override fun editTaskItem(taskItem: TaskItem) {
         // Edit task if it is not already completed
-        if (!taskItem.isCompleted()) NewTaskSheet(taskItem).show(parentFragmentManager, "newTaskTag")
+        if (!taskItem.isCompleted()) NewTaskSheet(taskItem, tagFilter).show(parentFragmentManager, "newTaskTag")
     }
 
     // Toggles task between complete and incomplete

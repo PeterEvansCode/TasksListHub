@@ -39,7 +39,7 @@ class RecordStore<T: IStandardRecord> {
     }
 
     fun get(id: Int): T?{
-        return _allItems.get(id)
+        return _allItems[id]
     }
 
     fun getAll(): List<T> {

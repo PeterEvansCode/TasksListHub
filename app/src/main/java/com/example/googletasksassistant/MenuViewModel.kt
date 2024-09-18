@@ -9,6 +9,9 @@ class MenuViewModel(private val repository: TaskItemRepository) : ViewModel()
 {
     var allTaskTags: LiveData<List<TaskTag>> = repository.allTagsLiveData
 
+    fun getTaskTag(tagID: Int): TaskTag?{
+        return repository.getTag(tagID)
+    }
 }
 
 class MenuModelFactory(private val repository: TaskItemRepository): ViewModelProvider.Factory

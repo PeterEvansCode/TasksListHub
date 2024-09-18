@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="group_dynamic" type="id"/>
+    <item name="group_tag_menu_items" type="id"/>
 </resources>
