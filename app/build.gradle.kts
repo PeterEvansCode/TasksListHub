@@ -1,15 +1,25 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
 }
 
+val propertiesFile = rootProject.file("local.properties")
+val properties = Properties().apply { load(FileInputStream(propertiesFile)) }
+val clientId: String by properties
+
 android {
-    namespace = "com.example.googletasksassistant"
+    namespace = "com.example.taskslisthub"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.googletasksassistant"
+        buildConfigField("String", "CLIENT_ID", "\"$clientId\"")
+        manifestPlaceholders["CLIENT_ID"] = clientId
+
+        applicationId = "com.example.taskslisthub"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -41,6 +51,10 @@ android {
 }
 
 dependencies {
+    //google tasks API
+    implementation ("com.google.android.gms:play-services-auth:21.2.0")  // Google Sign-In
+    implementation ("com.google.api-client:google-api-client-android:1.33.0") // Google API client
+    implementation ("com.google.apis:google-api-services-tasks:v1-rev123-1.25.0")  // Google Tasks API
 
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
