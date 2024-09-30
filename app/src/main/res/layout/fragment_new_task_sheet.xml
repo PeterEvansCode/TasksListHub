@@ -8,7 +8,7 @@
 
 
     <TextView
-        android:id="@+id/taskTitle"
+        android:id="@+id/task_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="New Task"
@@ -47,7 +47,15 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/timePickerButton"
+        android:id="@+id/set_priority_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="20dp"
+        android:text="Select Priority"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/due_picker_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -55,7 +63,7 @@
         android:text="Select Time"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/saveButton"
+        android:id="@+id/save_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

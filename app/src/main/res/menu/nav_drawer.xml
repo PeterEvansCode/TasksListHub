@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group
+        android:checkableBehavior="single"
+        android:id="@+id/group_misc">
+
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/baseline_home_24"
+            android:title="Home"/>
+
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/baseline_settings_24"
+            android:title="Settings"/>
+
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/baseline_info_24"
+            android:title="About Us"/>
+    </group>
+
+    <group
+        android:checkableBehavior="single"
+        android:id="@+id/group_deleted">
+
+        <item
+            android:id="@+id/nav_deleted_tasks"
+            android:icon="@drawable/baseline_delete_24"
+            android:title="Recently Deleted Tasks"/>
+
+        <item
+            android:id="@+id/nav_deleted_tags"
+            android:icon="@drawable/baseline_delete_24"
+            android:title="Previously Deleted Tags"/>
+
+    </group>
+
+    <group
+        android:checkableBehavior="single"
+        android:id="@+id/group_priorities">
+
+        <item
+            android:id="@+id/nav_priority_high"
+            android:icon="@drawable/ic_clip_board_24"
+            android:title="High Priority"/>
+
+        <item
+            android:id="@+id/nav_priority_medium"
+            android:icon="@drawable/ic_clip_board_24"
+            android:title="Medium Priority"/>
+
+        <item
+            android:id="@+id/nav_priority_low"
+            android:icon="@drawable/ic_clip_board_24"
+            android:title="Low Priority"/>
+
+    </group>
+
+</menu>

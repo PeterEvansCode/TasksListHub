@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@menu/nav_menu"
+        app:menu="@menu/nav_drawer"
         app:itemIconTint="@color/design_default_color_primary"
         app:itemTextColor="@color/design_default_color_primary"/>
 

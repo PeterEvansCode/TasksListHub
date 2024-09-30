@@ -16,4 +16,5 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="open_drawer">Open Menu</string>
     <string name="search">search</string>
+    <string name="sort_button">Sort</string>
 </resources>

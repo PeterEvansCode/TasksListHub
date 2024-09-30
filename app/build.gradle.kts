@@ -51,6 +51,7 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 
+    implementation ("org.apache.commons:commons-text:1.10.0")
     implementation ("com.google.android.flexbox:flexbox:3.0.0")
     implementation("androidx.room:room-ktx:2.4.3")
     kapt("androidx.room:room-compiler:2.6.1")

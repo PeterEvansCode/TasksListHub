@@ -20,7 +20,7 @@
             android:paddingVertical="1dp">
 
             <ImageButton
-                android:id="@+id/completeButton"
+                android:id="@+id/complete_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -43,7 +43,7 @@
                 />
 
             <TextView
-                android:id="@+id/dueTime"
+                android:id="@+id/due_text"
                 android:layout_marginHorizontal="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                 />
 
             <ImageButton
-                android:id="@+id/deleteButton"
+                android:id="@+id/delete_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -67,6 +67,14 @@
 
         </LinearLayout>
 
+        <!--TextView
+            android:id="@+id/task_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/place_holder"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginVertical="10dp"/-->
+
         <com.google.android.flexbox.FlexboxLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -74,7 +82,7 @@
             android:scaleY="0.7">
 
             <com.google.android.flexbox.FlexboxLayout
-                android:id="@+id/tagLayout"
+                android:id="@+id/tag_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleX="0.7"
@@ -83,7 +91,7 @@
             </com.google.android.flexbox.FlexboxLayout>
 
             <Button
-                android:id="@+id/addTagButton"
+                android:id="@+id/add_tag_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/new_tag_button_text"
