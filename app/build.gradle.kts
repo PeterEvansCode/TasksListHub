@@ -5,9 +5,12 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
+    id("com.google.gms.google-services")
 }
 
-val propertiesFile = rootProject.file("local.properties")
+//get google client ID
+val propertiesFile: File = rootProject.file("local.properties")
+if (!propertiesFile.exists()) throw GradleException("local.properties file is missing!")
 val properties = Properties().apply { load(FileInputStream(propertiesFile)) }
 val clientId: String by properties
 
@@ -20,7 +23,7 @@ android {
         manifestPlaceholders["CLIENT_ID"] = clientId
 
         applicationId = "com.example.taskslisthub"
-        minSdk = 26
+        minSdk = 34
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -55,7 +58,12 @@ dependencies {
     implementation ("com.google.android.gms:play-services-auth:21.2.0")  // Google Sign-In
     implementation ("com.google.api-client:google-api-client-android:1.33.0") // Google API client
     implementation ("com.google.apis:google-api-services-tasks:v1-rev123-1.25.0")  // Google Tasks API
+    implementation("androidx.credentials:credentials:1.5.0")
+    implementation ("androidx.credentials:credentials:<latest version>")
+    implementation ("androidx.credentials:credentials-play-services-auth:<latest version>")
+    implementation ("com.google.android.libraries.identity.googleid:googleid:1.1.1")
 
+    implementation("androidx.preference:preference-ktx:1.2.1")
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
@@ -67,12 +75,10 @@ dependencies {
 
     implementation ("org.apache.commons:commons-text:1.10.0")
     implementation ("com.google.android.flexbox:flexbox:3.0.0")
-    implementation("androidx.room:room-ktx:2.4.3")
-    kapt("androidx.room:room-compiler:2.6.1")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.4")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.4")
-    implementation("androidx.activity:activity-ktx:1.9.1")
-    implementation("androidx.fragment:fragment-ktx:1.8.2")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.6")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6")
+    implementation("androidx.activity:activity-ktx:1.9.2")
+    implementation("androidx.fragment:fragment-ktx:1.8.3")
     annotationProcessor("android.arch.persistence.room:compiler:1.1.1")
     implementation("androidx.room:room-runtime:2.6.1")
 
