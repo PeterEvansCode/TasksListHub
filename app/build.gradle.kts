@@ -23,7 +23,7 @@ android {
         manifestPlaceholders["CLIENT_ID"] = clientId
 
         applicationId = "com.example.taskslisthub"
-        minSdk = 34
+        minSdk = 31
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -32,7 +32,8 @@ android {
     }
 
     buildFeatures{
-       viewBinding = true
+        viewBinding = true
+        buildConfig = true
     }
 
     buildTypes {
@@ -48,8 +49,21 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+
+    packagingOptions {
+        resources {
+            excludes += listOf(
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt"
+            )
+        }
     }
 }
 
@@ -57,11 +71,12 @@ dependencies {
     //google tasks API
     implementation ("com.google.android.gms:play-services-auth:21.2.0")  // Google Sign-In
     implementation ("com.google.api-client:google-api-client-android:1.33.0") // Google API client
-    implementation ("com.google.apis:google-api-services-tasks:v1-rev123-1.25.0")  // Google Tasks API
-    implementation("androidx.credentials:credentials:1.5.0")
-    implementation ("androidx.credentials:credentials:<latest version>")
-    implementation ("androidx.credentials:credentials-play-services-auth:<latest version>")
+    implementation ("androidx.credentials:credentials:1.3.0")
+    implementation ("androidx.credentials:credentials-play-services-auth:1.3.0")
     implementation ("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+    implementation ("com.google.firebase:firebase-auth:23.0.0")
+    implementation ("com.google.android.gms:play-services-auth:21.2.0")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 
     implementation("androidx.preference:preference-ktx:1.2.1")
     implementation("androidx.core:core-ktx:1.13.1")

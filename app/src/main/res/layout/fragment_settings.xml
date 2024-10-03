@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".SettingsFragment">
 
@@ -17,10 +18,28 @@
             android:text="Settings" />
     </com.example.taskslisthub.CustomToolbar>
 
-    <Button
-        android:id="@+id/sign_in_button"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sign In with Google" />
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/logout_24"
+            app:civ_border_width="2dp"
+            app:civ_border_color="@color/white"/>
+
+        <Button
+            android:id="@+id/sign_in_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign In with Google"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
+
+
 
 </LinearLayout>
