@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".SettingsFragment">
 
@@ -18,28 +17,23 @@
             android:text="Settings" />
     </com.example.taskslisthub.CustomToolbar>
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:text="Google Account"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_image"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:src="@drawable/logout_24"
-            app:civ_border_width="2dp"
-            app:civ_border_color="@color/white"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC" />
 
-        <Button
-            android:id="@+id/sign_in_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sign In with Google"
-            android:layout_gravity="center"/>
-    </LinearLayout>
-
-
-
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/google_login_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="com.example.taskslisthub.GoogleLoginFragment"/>
 
 </LinearLayout>
