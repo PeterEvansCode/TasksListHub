@@ -41,11 +41,7 @@ class GoogleLoginFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         if (FirebaseAuth.getInstance().currentUser != null){
-            // Reload the SettingsFragment after successful sign-in
-            parentFragmentManager.beginTransaction().apply {
-                replace(R.id.fragment_container, SettingsFragment())
-                commit()
-            }
+            initialiseSignedIn()
         }
     }
 
@@ -65,11 +61,11 @@ class GoogleLoginFragment : Fragment() {
         else initialiseSignedOut()
     }
 
-    /*private fun initialiseSignedIn(){
+    private fun initialiseSignedIn(){
         val signedInAccount = GoogleSignIn.getLastSignedInAccount(requireContext())
 
         // Set up the Sign-In button
-        binding.signInButton.text = R.string.signed_in_button.toString()
+        binding.signInButton.text = getString(R.string.signed_in_button)
         binding.signInButton.setOnClickListener {
             signOut()
         }
@@ -86,13 +82,13 @@ class GoogleLoginFragment : Fragment() {
 
     private fun initialiseSignedOut(){
         // Set up the Sign-In button
-        binding.signInButton.text = R.string.signed_out_button.toString()
+        binding.signInButton.text = getString(R.string.signed_out_button)
         binding.signInButton.setOnClickListener {
             signIn()
         }
 
         //set logged out text
-        binding.googleAccountName.text = R.string.signed_out_account.toString()
+        binding.googleAccountName.text = getString(R.string.signed_out_account)
 
         //set blank profile picture
         binding.profileImage.setImageResource(R.drawable.logout_24)
@@ -120,12 +116,12 @@ class GoogleLoginFragment : Fragment() {
                 val account = task.getResult(ApiException::class.java) //error here
                 val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                 FirebaseAuth.getInstance().signInWithCredential(credential)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
+                    .addOnCompleteListener {
+                        if (it.isSuccessful) {
                             initialiseSignedIn()
                         } else {
                             // Show a toast with the error message
-                            Toast.makeText(requireContext(), task.exception?.message, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), it.exception?.message, Toast.LENGTH_SHORT).show()
                         }
                     }
             } catch (e: ApiException) {
@@ -139,5 +135,5 @@ class GoogleLoginFragment : Fragment() {
     private fun signOut(){
         FirebaseAuth.getInstance().signOut()
         initialiseSignedOut()
-    }*/
+    }
 }
