@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GoogleLoginFragment"
+    tools:context=".SettingsFragment.GoogleLoginFragment"
     android:orientation="horizontal">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -30,6 +30,7 @@
             android:layout_gravity="center"/>
 
         <Button
+            style="@style/ButtonStyle"
             android:id="@+id/sign_in_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

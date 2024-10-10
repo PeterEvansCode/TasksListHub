@@ -20,4 +20,6 @@
     <string name="signed_out_account">Not Linked</string>
     <string name="signed_out_button">Link Account</string>
     <string name="signed_in_button">Unlink Account</string>
+    <string name="cancel_choose_time">Leave Time Blank</string>
+    <string name="confirm_choose_time">OK</string>
 </resources>

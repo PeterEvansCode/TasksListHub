@@ -54,7 +54,7 @@ android {
         jvmTarget = "1.8"
     }
 
-    packagingOptions {
+    /*packaging {
         resources {
             excludes += listOf(
                 "META-INF/DEPENDENCIES",
@@ -64,21 +64,27 @@ android {
                 "META-INF/NOTICE.txt"
             )
         }
-    }
+    }*/
 }
 
 dependencies {
-    //google tasks API
-    implementation ("com.google.android.gms:play-services-auth:21.2.0")  // Google Sign-In
-    implementation ("com.google.api-client:google-api-client-android:1.33.0") // Google API client
+
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+    implementation ("com.github.bumptech.glide:glide:4.14.2")
+    implementation ("com.google.android.gms:play-services-auth:21.2.0")
+    //implementation ("com.google.api-client:google-api-client:1.33.0")
+    implementation("com.google.api-client:google-api-client-android:1.33.0")
+    implementation("com.google.apis:google-api-services-tasks:v1-rev71-1.25.0")
+    implementation ("com.google.firebase:firebase-auth:23.0.0")
+    implementation("com.google.api-client:google-api-client-gson:1.33.0")
+
+    //google tasks API // Google Sign-In
+    /*implementation ("com.google.api-client:google-api-client-android:1.33.0") // Google API client
     implementation ("androidx.credentials:credentials:1.3.0")
     implementation ("androidx.credentials:credentials-play-services-auth:1.3.0")
     implementation ("com.google.android.libraries.identity.googleid:googleid:1.1.1")
-    implementation ("com.google.firebase:firebase-auth:23.0.0")
-    implementation ("com.google.android.gms:play-services-auth:21.2.0")
-    implementation("de.hdodenhof:circleimageview:3.1.0")
-    implementation ("com.github.bumptech.glide:glide:4.14.2")
-    annotationProcessor ("com.github.bumptech.glide:compiler:4.14.2")
+    implementation("com.google.android.gms:play-services-fido:21.2.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.14.2")*/
 
     implementation("androidx.preference:preference-ktx:1.2.1")
     implementation("androidx.core:core-ktx:1.13.1")
@@ -95,8 +101,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.6")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6")
     implementation("androidx.activity:activity-ktx:1.9.2")
-    implementation("androidx.fragment:fragment-ktx:1.8.3")
+    implementation("androidx.fragment:fragment-ktx:1.8.4")
     annotationProcessor("android.arch.persistence.room:compiler:1.1.1")
     implementation("androidx.room:room-runtime:2.6.1")
+    implementation("com.google.android.material:material:1.12.0")
 
 }

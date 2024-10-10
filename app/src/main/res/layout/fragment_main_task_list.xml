@@ -40,6 +40,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageButton
+                    style="@style/ButtonStyleSubtle"
                     android:id="@+id/sort_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -68,16 +69,14 @@
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        style="@style/ButtonStyle"
         android:id="@+id/newTaskButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Task"
-        android:backgroundTint="?attr/colorPrimary"
-        android:textColor="?colorOnPrimary"
         android:padding="5dp"
         android:layout_margin="20dp"
         app:icon="@drawable/baseline_add_24"
-        app:iconTint="?colorOnPrimary"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         />

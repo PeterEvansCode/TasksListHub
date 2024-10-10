@@ -7,8 +7,24 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
+
     <style name="Widget.Theme.GoogleTasksAssistant.ButtonBar.Fullscreen" parent="">
         <item name="android:background">@color/black_overlay</item>
         <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+    </style>
+
+    <style name="ThemeOverlay.GoogleTasksAssistant.FullscreenContainer" parent="">
+        <item name="fullscreenBackgroundColor">@color/light_blue_900</item>
+        <item name="fullscreenTextColor">@color/light_blue_A400</item>
+    </style>
+
+    <style name="ButtonStyle" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="android:backgroundTint">?attr/colorPrimary</item>
+        <item name="android:foregroundTint">?attr/colorOnPrimary</item>
+    </style>
+
+    <style name="ButtonStyleSubtle" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="android:backgroundTint">@android:color/transparent</item>
+        <item name="android:foregroundTint">?attr/colorPrimary</item>
     </style>
 </resources>

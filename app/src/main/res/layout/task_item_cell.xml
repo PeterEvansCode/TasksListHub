@@ -20,6 +20,7 @@
             android:paddingVertical="1dp">
 
             <ImageButton
+                style="@style/ButtonStyleSubtle"
                 android:id="@+id/complete_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -29,7 +30,6 @@
                 android:contentDescription="@string/checkbox"
                 android:layout_marginHorizontal="15dp"
                 android:src="@drawable/unchecked_24"
-                android:backgroundTint="@android:color/transparent"
                 />
 
             <TextView
@@ -53,6 +53,7 @@
                 />
 
             <ImageButton
+                style="@style/ButtonStyleSubtle"
                 android:id="@+id/delete_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -91,6 +92,7 @@
             </com.google.android.flexbox.FlexboxLayout>
 
             <Button
+                style="@style/ButtonStyle"
                 android:id="@+id/add_tag_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

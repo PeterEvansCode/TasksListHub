@@ -4,10 +4,12 @@ import com.example.taskslisthub.models.TaskDatabaseManager
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.taskslisthub.models.GoogleTasksManager
 import com.example.taskslisthub.models.TaskItem
 import com.example.taskslisthub.models.TaskTag
 import com.example.taskslisthub.models.taskStores.RecordStore
 import com.example.taskslisthub.models.taskStores.TaskItemStore
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -15,6 +17,8 @@ import kotlinx.coroutines.launch
 
 class TaskItemRepository(private val db: TaskDatabaseManager)
 {
+    //API handler for google tasks
+    private lateinit var _googleTasksManager: GoogleTasksManager
 
     //makes all taskTags visible to the UI
     private val _taskTagStore = RecordStore<TaskTag>()
@@ -166,5 +170,14 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
     private fun postTagValues(){
         _allTagsLiveData.postValue(_taskTagStore.getAll())
         _filteredTagsLiveData.postValue(_taskTagStore.getFiltered())
+    }
+
+    //google account
+    fun setGoogleAccount(account: GoogleSignInAccount?) {
+        _googleTasksManager.setGoogleAccount(account)
+    }
+
+    fun getGoogleAccount(): GoogleSignInAccount? {
+        return _googleTasksManager.getGoogleAccount()
     }
 }

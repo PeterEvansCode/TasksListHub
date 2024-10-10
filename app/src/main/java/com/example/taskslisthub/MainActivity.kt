@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.example.taskslisthub.SettingsFragment.SettingsFragment
 import com.example.taskslisthub.TaskListFragment.TaskListFragment
 import com.example.taskslisthub.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView

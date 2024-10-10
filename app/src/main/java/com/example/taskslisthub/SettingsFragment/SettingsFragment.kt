@@ -1,32 +1,14 @@
-package com.example.taskslisthub
+package com.example.taskslisthub.SettingsFragment
 
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.credentials.CredentialManager
-import android.credentials.GetCredentialException
-import android.credentials.GetCredentialRequest
-import android.credentials.GetCredentialResponse
 import android.os.Bundle
-import android.os.OutcomeReceiver
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.example.taskslisthub.R
 import com.example.taskslisthub.databinding.FragmentSettingsBinding
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
-import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
-import java.security.SecureRandom
-import java.util.Base64
 
 class SettingsFragment : Fragment() {
 

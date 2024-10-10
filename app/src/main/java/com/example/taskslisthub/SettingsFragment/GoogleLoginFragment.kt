@@ -1,4 +1,4 @@
-package com.example.taskslisthub
+package com.example.taskslisthub.SettingsFragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,12 +7,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
+import com.example.taskslisthub.BuildConfig
+import com.example.taskslisthub.R
+import com.example.taskslisthub.TagSelectionFragment.TagSelectionViewModel
+import com.example.taskslisthub.TasksListHub
 import com.example.taskslisthub.databinding.FragmentGoogleLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.Scope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import java.security.SecureRandom
@@ -26,6 +32,11 @@ class GoogleLoginFragment : Fragment() {
     //google tasks API
     private lateinit var client: GoogleSignInClient
     val REQUESTCODE = 10001
+
+    //viewModel
+    private val settingsViewModel: SettingsViewModel by viewModels{
+        SettingsViewModel.SettingsViewModelFactory((requireActivity().application as TasksListHub).repository)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +62,8 @@ class GoogleLoginFragment : Fragment() {
         val options = GoogleSignInOptions.Builder()
             .requestIdToken(BuildConfig.CLIENT_ID)
             .requestEmail()
+            .requestScopes(Scope("https://www.googleapis.com/auth/tasks"))
+            .setAccountName(null.toString())
             .build()
         client = GoogleSignIn.getClient(requireActivity(), options)
 
@@ -62,7 +75,8 @@ class GoogleLoginFragment : Fragment() {
     }
 
     private fun initialiseSignedIn(){
-        val signedInAccount = GoogleSignIn.getLastSignedInAccount(requireContext())
+        settingsViewModel.setGoogleAccount(GoogleSignIn.getLastSignedInAccount(requireContext()))
+        val signedInAccount = settingsViewModel.getGoogleAccount()
 
         // Set up the Sign-In button
         binding.signInButton.text = getString(R.string.signed_in_button)
@@ -95,8 +109,11 @@ class GoogleLoginFragment : Fragment() {
     }
 
     private fun signIn() {
-        val intent = client.signInIntent
-        startActivityForResult(intent, REQUESTCODE)
+        // Sign out the current user to prompt the account chooser
+        client.signOut().addOnCompleteListener {
+            val intent = client.signInIntent
+            startActivityForResult(intent, REQUESTCODE)
+        }
     }
 
     private fun generateNonce(): String {
