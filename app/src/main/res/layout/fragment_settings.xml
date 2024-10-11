@@ -17,23 +17,16 @@
             android:text="Settings" />
     </com.example.taskslisthub.CustomToolbar>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Google Account"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#CCCCCC" />
-
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/google_login_fragment_container"
+        android:id="@+id/google_login_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:name="com.example.taskslisthub.SettingsFragment.GoogleLoginFragment"/>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/personalise_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="com.example.taskslisthub.SettingsFragment.PersonaliseFragment"/>
 
 </LinearLayout>

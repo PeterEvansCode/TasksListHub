@@ -22,4 +22,10 @@
     <string name="signed_in_button">Unlink Account</string>
     <string name="cancel_choose_time">Leave Time Blank</string>
     <string name="confirm_choose_time">OK</string>
+
+    <string-array name="theme_options">
+        <item>System Default</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
 </resources>

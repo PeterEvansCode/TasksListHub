@@ -1,5 +1,6 @@
 package com.example.taskslisthub.SettingsFragment
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.taskslisthub.TagSelectionFragment.TagSelectionViewModel
@@ -8,8 +9,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 
 class SettingsViewModel(private val repository: TaskItemRepository) : ViewModel() {
 
-    fun setGoogleAccount(account: GoogleSignInAccount?) {
-        repository.setGoogleAccount(account)
+    fun setGoogleAccount(context: Context) {
+        repository.setGoogleAccount(context)
     }
 
     fun getGoogleAccount(): GoogleSignInAccount? {

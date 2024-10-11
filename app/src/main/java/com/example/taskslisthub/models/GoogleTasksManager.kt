@@ -1,13 +1,14 @@
 package com.example.taskslisthub.models
 
 import android.content.Context
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.tasks.Tasks
 
-class GoogleTasksManager(private val context: Context) {
+class GoogleTasksManager() {
 
     private lateinit var tasksService: Tasks
 
@@ -15,9 +16,9 @@ class GoogleTasksManager(private val context: Context) {
     private var googleAccount: GoogleSignInAccount? = null
 
     // Set Google account
-    fun setGoogleAccount(account: GoogleSignInAccount?) {
-        googleAccount = account
-        account?.let { setupTasksService(it) }
+    fun setGoogleAccount(context: Context) {
+        googleAccount = GoogleSignIn.getLastSignedInAccount(context)
+        googleAccount?.let { setupTasksService(context) }
     }
 
     // Get Google account
@@ -25,12 +26,12 @@ class GoogleTasksManager(private val context: Context) {
         return googleAccount
     }
 
-    private fun setupTasksService(account: GoogleSignInAccount) {
+    private fun setupTasksService(context: Context) {
         val credential = GoogleAccountCredential.usingOAuth2(
             context,
             listOf("https://www.googleapis.com/auth/tasks")
         )
-        credential.selectedAccount = account.account
+        credential.selectedAccount = googleAccount?.account
 
         // Create the Google Tasks API client
         val transport = NetHttpTransport()

@@ -54,7 +54,7 @@ android {
         jvmTarget = "1.8"
     }
 
-    /*packaging {
+    packaging {
         resources {
             excludes += listOf(
                 "META-INF/DEPENDENCIES",
@@ -64,7 +64,7 @@ android {
                 "META-INF/NOTICE.txt"
             )
         }
-    }*/
+    }
 }
 
 dependencies {

@@ -1,5 +1,6 @@
 package com.example.taskslisthub
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
@@ -7,9 +8,11 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.preference.PreferenceManager
 import com.example.taskslisthub.SettingsFragment.SettingsFragment
 import com.example.taskslisthub.TaskListFragment.TaskListFragment
 import com.example.taskslisthub.databinding.ActivityMainBinding
@@ -17,6 +20,7 @@ import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var binding: ActivityMainBinding
 
     // Assign viewModel
@@ -26,6 +30,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+
+        //set correct theme
+        applyTheme()
 
         // Initialize binding
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -120,5 +129,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun openFragment(fragment: Fragment){
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment).commit()
+    }
+
+    private fun applyTheme() {
+        val themePreference = sharedPreferences.getString("theme_preference", "system")
+        when (themePreference) {
+            "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            "system" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        }
     }
 }

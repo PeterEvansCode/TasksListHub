@@ -2,6 +2,7 @@ package com.example.taskslisthub
 
 import android.content.Context
 import android.util.AttributeSet
+import android.widget.LinearLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -12,8 +13,9 @@ class CustomToolbar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : Toolbar(context, attrs, defStyleAttr) {
+) : LinearLayout(context, attrs, defStyleAttr) {
 
+    private lateinit var binding: CustomToolbarBinding
     private lateinit var activity: AppCompatActivity
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle

@@ -1,7 +1,9 @@
 package com.example.taskslisthub
 
+import android.content.Context
 import com.example.taskslisthub.models.TaskDatabaseManager
 import androidx.annotation.WorkerThread
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.taskslisthub.models.GoogleTasksManager
@@ -18,7 +20,7 @@ import kotlinx.coroutines.launch
 class TaskItemRepository(private val db: TaskDatabaseManager)
 {
     //API handler for google tasks
-    private lateinit var _googleTasksManager: GoogleTasksManager
+    private val _googleTasksManager = GoogleTasksManager()
 
     //makes all taskTags visible to the UI
     private val _taskTagStore = RecordStore<TaskTag>()
@@ -173,8 +175,8 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
     }
 
     //google account
-    fun setGoogleAccount(account: GoogleSignInAccount?) {
-        _googleTasksManager.setGoogleAccount(account)
+    fun setGoogleAccount(context: Context) {
+        _googleTasksManager.setGoogleAccount(context)
     }
 
     fun getGoogleAccount(): GoogleSignInAccount? {

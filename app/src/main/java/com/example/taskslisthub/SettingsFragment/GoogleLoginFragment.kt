@@ -49,13 +49,6 @@ class GoogleLoginFragment : Fragment() {
         return binding.root
     }
 
-    override fun onStart() {
-        super.onStart()
-        if (FirebaseAuth.getInstance().currentUser != null){
-            initialiseSignedIn()
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -75,7 +68,7 @@ class GoogleLoginFragment : Fragment() {
     }
 
     private fun initialiseSignedIn(){
-        settingsViewModel.setGoogleAccount(GoogleSignIn.getLastSignedInAccount(requireContext()))
+        settingsViewModel.setGoogleAccount(requireContext())
         val signedInAccount = settingsViewModel.getGoogleAccount()
 
         // Set up the Sign-In button
