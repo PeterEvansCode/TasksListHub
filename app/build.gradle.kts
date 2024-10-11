@@ -106,4 +106,6 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("com.google.android.material:material:1.12.0")
 
+    implementation ("com.github.Dhaval2404:ColorPicker:2.3")
+
 }

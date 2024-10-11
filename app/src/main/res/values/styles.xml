@@ -23,15 +23,23 @@
         <item name="android:backgroundTint">?attr/colorSurface</item>
         <item name="android:drawableTint">?attr/colorPrimary</item>
         <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="iconTint">?attr/colorPrimary</item>
     </style>
 
     <style name="ButtonStyleSubtle" parent="Widget.AppCompat.Button">
         <item name="android:backgroundTint">@android:color/transparent</item>
         <item name="android:tint">?attr/colorPrimary</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
         <item name="android:textColor">?attr/colorPrimary</item>
     </style>
 
     <style name="ImageButtonStyleSubtle" parent="ButtonStyleSubtle">
         <item name="android:tint">?attr/colorPrimary</item>
+    </style>
+
+    <!-- Text Styles-->
+    <style name="Title">
+        <item name="android:textSize">30dp</item>
     </style>
 </resources>

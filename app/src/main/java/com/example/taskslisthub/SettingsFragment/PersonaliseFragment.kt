@@ -1,18 +1,20 @@
 package com.example.taskslisthub.SettingsFragment
 
+import android.app.AlertDialog
+import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Spinner
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import com.example.taskslisthub.R
 import com.example.taskslisthub.databinding.FragmentPersonaliseBinding
+import com.github.dhaval2404.colorpicker.ColorPickerDialog
 
 class PersonaliseFragment : Fragment() {
 
@@ -81,12 +83,32 @@ class PersonaliseFragment : Fragment() {
             }
 
             // Apply the selected theme
-            applyTheme()
+            applyChanges()
         }
     }
 
     // Function to apply the selected theme
-    private fun applyTheme() {
+    private fun applyChanges() {
         requireActivity().recreate()
+    }
+
+    fun showColorPicker() {
+        ColorPickerDialog
+            .Builder(requireContext()) // or `this` if using an Activity
+            .setTitle("Pick an Accent Color")
+            .setDefaultColor(com.bumptech.glide.R.attr.colorPrimary)
+            .setColorListener { color, colorHex ->
+                saveColorPreference(color)
+            }
+            .show()
+    }
+
+    private fun saveColorPreference(color: Int) {
+        val sharedPreferences = context!!.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putInt("colorPrimary", color)
+        editor.apply()
+
+        applyChanges()
     }
 }
