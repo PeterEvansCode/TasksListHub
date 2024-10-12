@@ -172,5 +172,32 @@ class Utilities {
                 dateString
             )
         }
+
+        fun dateTimeGoogleFormat(time: LocalTime? = null, date: LocalDate? = null): String{
+            var timeString = ""
+            var dateString = ""
+            if (time != null){
+                timeString = String.format(
+                    "%02d:%02dZ",
+                    time.hour,
+                    time.minute
+                )
+            }
+
+            if (date != null){
+                dateString = String.format(
+                    "%d/%d/%d",
+                    date.year,
+                    date.monthValue,
+                    date.dayOfMonth
+                )
+            }
+
+            return String.format(
+                "%s %s",
+                dateString,
+                timeString
+            )
+        }
     }
 }

@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Spinner
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import com.example.taskslisthub.R
@@ -33,6 +34,9 @@ class PersonaliseFragment : Fragment() {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
         initialiseSpinner()
+        binding.changeColorButton.setOnClickListener{
+            showColorPicker()
+        }
 
         return binding.root
     }
@@ -92,11 +96,11 @@ class PersonaliseFragment : Fragment() {
         requireActivity().recreate()
     }
 
-    fun showColorPicker() {
+    private fun showColorPicker() {
         ColorPickerDialog
             .Builder(requireContext()) // or `this` if using an Activity
             .setTitle("Pick an Accent Color")
-            .setDefaultColor(com.bumptech.glide.R.attr.colorPrimary)
+            .setDefaultColor(R.color.colorAccent)
             .setColorListener { color, colorHex ->
                 saveColorPreference(color)
             }
@@ -104,10 +108,11 @@ class PersonaliseFragment : Fragment() {
     }
 
     private fun saveColorPreference(color: Int) {
-        val sharedPreferences = context!!.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putInt("colorPrimary", color)
-        editor.apply()
+        val sharedPreferences = requireContext().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putInt("colorPrimary", color)
+            apply()
+        }
 
         applyChanges()
     }

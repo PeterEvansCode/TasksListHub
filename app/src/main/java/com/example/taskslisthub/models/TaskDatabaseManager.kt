@@ -15,6 +15,7 @@ class TaskDatabaseManager(private val context: Context) {
     //tasks table constants
     private val TASKS_TABLE = "tasks"
     private val TASK_ID = "taskID"
+    private val TASK_GOOGLE_ID = "tasksGoogleID"
     private val TASK_NAME = "taskName"
     private val TASK_DESC = "taskDescription"
     private val TASK_DUE_TIME = "taskDueTime"
@@ -59,6 +60,7 @@ class TaskDatabaseManager(private val context: Context) {
             """
             CREATE TABLE IF NOT EXISTS $TASKS_TABLE (
                 $TASK_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                $TASK_GOOGLE_ID STRING,
                 $TASK_NAME TEXT,
                 $TASK_DESC TEXT,
                 $TASK_DUE_TIME TEXT,
@@ -103,12 +105,13 @@ class TaskDatabaseManager(private val context: Context) {
             database.execSQL(
                 //query
                 """
-                INSERT INTO $TASKS_TABLE ($TASK_NAME, $TASK_DESC, $TASK_DUE_TIME, $TASK_DUE_DATE, $TASK_COMPLETED_DATE, $TASK_PRIORITY)
+                INSERT INTO $TASKS_TABLE ($TASK_GOOGLE_ID, $TASK_NAME, $TASK_DESC, $TASK_DUE_TIME, $TASK_DUE_DATE, $TASK_COMPLETED_DATE, $TASK_PRIORITY)
                 VALUES (?, ?, ?, ?, ?, ?)
                 """.trimIndent(),
 
                 //arguments
                 arrayOf(
+                    taskItem.googleId,
                     taskItem.name,
                     taskItem.desc,
                     taskItem.dueTimeString,
@@ -208,12 +211,13 @@ class TaskDatabaseManager(private val context: Context) {
                 //query
                 """
                 UPDATE $TASKS_TABLE
-                SET $TASK_NAME = ?, $TASK_DESC = ?, $TASK_DUE_TIME = ?, $TASK_DUE_DATE = ?, $TASK_COMPLETED_DATE = ?, $TASK_PRIORITY = ?
+                SET $TASK_GOOGLE_ID = ?, $TASK_NAME = ?, $TASK_DESC = ?, $TASK_DUE_TIME = ?, $TASK_DUE_DATE = ?, $TASK_COMPLETED_DATE = ?, $TASK_PRIORITY = ?
                 WHERE $TASK_ID = ?
                 """.trimIndent(),
 
                 //arguments
                 arrayOf(
+                    taskItem.googleId,
                     taskItem.name,
                     taskItem.desc,
                     taskItem.dueTimeString,
@@ -312,6 +316,7 @@ class TaskDatabaseManager(private val context: Context) {
         cursor.use {
             while (cursor.moveToNext()) {
                 val taskID = cursor.getInt(cursor.getColumnIndexOrThrow(TASK_ID))
+                val tasksGoogleId = cursor.getString(cursor.getColumnIndexOrThrow(TASK_GOOGLE_ID))
                 val name = cursor.getString(cursor.getColumnIndexOrThrow(TASK_NAME))
                 val description = cursor.getString(cursor.getColumnIndexOrThrow(TASK_DESC))
                 val dueTime = cursor.getString(cursor.getColumnIndexOrThrow(TASK_DUE_TIME))
@@ -319,7 +324,7 @@ class TaskDatabaseManager(private val context: Context) {
                 val completedDate = cursor.getString(cursor.getColumnIndexOrThrow(TASK_COMPLETED_DATE))
                 val priority = cursor.getInt(cursor.getColumnIndexOrThrow(TASK_PRIORITY))
 
-                tasks.add(TaskItem(id = taskID, name = name, desc = description, dueTimeString = dueTime, dueDateString = dueDate, completedDateString = completedDate, priority = priority))
+                tasks.add(TaskItem(id = taskID, googleId = tasksGoogleId, name = name, desc = description, dueTimeString = dueTime, dueDateString = dueDate, completedDateString = completedDate, priority = priority))
             }
         }
 

@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -17,6 +18,7 @@ import com.example.taskslisthub.SettingsFragment.SettingsFragment
 import com.example.taskslisthub.TaskListFragment.TaskListFragment
 import com.example.taskslisthub.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -31,9 +33,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-
         //set correct theme
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         applyTheme()
 
         // Initialize binding
