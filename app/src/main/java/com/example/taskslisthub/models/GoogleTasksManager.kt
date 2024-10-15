@@ -13,6 +13,7 @@ import com.google.api.services.tasks.model.TaskList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class GoogleTasksManager() {
 
@@ -55,6 +56,7 @@ class GoogleTasksManager() {
     }
 
     suspend fun createTaskList(title: String) {
+        withContext(Dispatchers.IO){
         try {
             // Step 1: Retrieve all existing task lists
             val taskLists = tasksService.tasklists().list().execute().items
@@ -79,9 +81,15 @@ class GoogleTasksManager() {
             e.printStackTrace()
             Log.e("TAG", "Error while creating task list: ${e.message}")
         }
+            }
     }
 
-    suspend fun newTask(taskItem: TaskItem){
+    /**
+     * Adds task to google tasks and updates the taskItem's googleId field
+     * @param taskItem The task to be inserted
+     * @return Returns the passed in taskItem (unnecessary but helps to show that the taskItem has been updated)
+     */
+    fun newTask(taskItem: TaskItem): TaskItem{
         val newTask = Task().apply{
             title = taskItem.name
             notes = taskItem.desc
@@ -89,10 +97,14 @@ class GoogleTasksManager() {
         }
 
         val createdTask = tasksService.tasks().insert(tasksListId, newTask).execute()
+
+        //update taskItem with googleId
+        taskItem.googleId = createdTask.id
+        return taskItem
     }
 
 
-    suspend fun deleteTask(taskItem: TaskItem) {
+    fun deleteTask(taskItem: TaskItem) {
         try {
             tasksService.tasks().delete(tasksListId, taskItem.googleId).execute()
             println("Task deleted successfully.")

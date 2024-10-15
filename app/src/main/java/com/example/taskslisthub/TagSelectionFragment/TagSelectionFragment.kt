@@ -42,9 +42,12 @@ class TagSelectionFragment(var taskItem: TaskItem) : DialogFragment(), ITaskTagC
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.apply{
-            setStyle(DialogFragment.STYLE_NO_FRAME, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+
+        dialog.window?.apply {
+            setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            setWindowAnimations(android.R.style.Animation_Dialog) // Optional for animation
         }
+
         return dialog
     }
 

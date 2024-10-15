@@ -7,14 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.taskslisthub.BuildConfig
 import com.example.taskslisthub.R
+import com.example.taskslisthub.TaskListFragment.TaskItemModelFactory
+import com.example.taskslisthub.TaskListFragment.TaskViewModel
+import com.example.taskslisthub.TasksListHub
 import com.example.taskslisthub.databinding.FragmentGoogleLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.Scope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import java.security.SecureRandom
@@ -24,6 +29,11 @@ class GoogleLoginFragment : Fragment() {
 
     //binding
     private lateinit var binding: FragmentGoogleLoginBinding
+
+    // Assign viewModel
+    private val settingsViewModel: SettingsViewModel by viewModels {
+        SettingsViewModel.SettingsViewModelFactory((requireActivity().application as TasksListHub).repository)
+    }
 
     //google tasks API
     private lateinit var client: GoogleSignInClient
@@ -40,18 +50,13 @@ class GoogleLoginFragment : Fragment() {
         return binding.root
     }
 
-    override fun onStart() {
-        super.onStart()
-        if (FirebaseAuth.getInstance().currentUser != null){
-            initialiseSignedIn()
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val options = GoogleSignInOptions.Builder()
             .requestIdToken(BuildConfig.CLIENT_ID)
+            //.setAccountName(null.toString())
+            .requestScopes(Scope("https://www.googleapis.com/auth/tasks"))
             .requestEmail()
             .build()
         client = GoogleSignIn.getClient(requireActivity(), options)
@@ -64,7 +69,7 @@ class GoogleLoginFragment : Fragment() {
     }
 
     private fun initialiseSignedIn(){
-        val signedInAccount = GoogleSignIn.getLastSignedInAccount(requireContext())
+        val signedInAccount = settingsViewModel.getGoogleAccount()
 
         // Set up the Sign-In button
         binding.signInButton.text = getString(R.string.signed_in_button)
@@ -120,6 +125,7 @@ class GoogleLoginFragment : Fragment() {
                 FirebaseAuth.getInstance().signInWithCredential(credential)
                     .addOnCompleteListener {
                         if (it.isSuccessful) {
+                            settingsViewModel.setGoogleAccount(requireContext())
                             initialiseSignedIn()
                         } else {
                             // Show a toast with the error message
@@ -135,7 +141,9 @@ class GoogleLoginFragment : Fragment() {
 
 
     private fun signOut(){
-        FirebaseAuth.getInstance().signOut()
-        initialiseSignedOut()
+        FirebaseAuth.getInstance().signOut() //firebase sign-out
+        client.signOut().addOnCompleteListener {
+            initialiseSignedOut()  // Update UI after complete sign-out
+        }
     }
 }

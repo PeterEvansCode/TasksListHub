@@ -61,6 +61,10 @@ class TaskViewModel(private val repository: TaskItemRepository) : ViewModel()
         }
 
     fun removeTagsFromTask(taskItem: TaskItem, taskTag: TaskTag) = removeTagsFromTask(taskItem, listOf(taskTag))
+
+    fun setGoogleAccount(context: Context) {
+        repository.setGoogleAccount(context)
+    }
 }
 
 class TaskItemModelFactory(private val repository: TaskItemRepository): ViewModelProvider.Factory

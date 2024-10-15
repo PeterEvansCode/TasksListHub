@@ -11,6 +11,7 @@
         android:src="@drawable/drawer_menu_24"
         android:contentDescription="@string/menu"
         android:padding="8dp"
+        android:layout_weight="1"
         android:layout_gravity="start"/>
 
     <!-- Container for additional views -->
@@ -19,8 +20,9 @@
         android:id="@+id/custom_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:gravity="center_vertical"
-        android:orientation="horizontal"/>
+        android:orientation="horizontal"
+        android:backgroundTint="?attr/colorSurface"/>
 
 </merge>

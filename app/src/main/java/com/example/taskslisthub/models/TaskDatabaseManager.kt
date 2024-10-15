@@ -100,13 +100,12 @@ class TaskDatabaseManager(private val context: Context) {
      * @param taskItem Task item to insert
      * @return Returns the taskItem with the updated ID
      */
-    suspend fun insertTask(taskItem: TaskItem): TaskItem {
-        return withContext(Dispatchers.IO) {
+    fun insertTask(taskItem: TaskItem): TaskItem {
             database.execSQL(
                 //query
                 """
                 INSERT INTO $TASKS_TABLE ($TASK_GOOGLE_ID, $TASK_NAME, $TASK_DESC, $TASK_DUE_TIME, $TASK_DUE_DATE, $TASK_COMPLETED_DATE, $TASK_PRIORITY)
-                VALUES (?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """.trimIndent(),
 
                 //arguments
@@ -139,12 +138,10 @@ class TaskDatabaseManager(private val context: Context) {
             }
 
             taskItem.id = id
-            taskItem
-        }
+            return taskItem
     }
 
-    suspend fun insertTag(taskTag: TaskTag): TaskTag{
-        return withContext(Dispatchers.IO) {
+    fun insertTag(taskTag: TaskTag): TaskTag{
             database.execSQL(
                 //query
                 """
@@ -177,12 +174,10 @@ class TaskDatabaseManager(private val context: Context) {
             }
 
             taskTag.id = id
-            taskTag
-        }
+            return taskTag
     }
 
-    suspend fun insertTaskTagRelations(taskItem: TaskItem, taskTags: List<TaskTag>) {
-        withContext(Dispatchers.IO) {
+    fun insertTaskTagRelations(taskItem: TaskItem, taskTags: List<TaskTag>) {
             if (taskTags.isNotEmpty()) {
                 // Create a comma-separated list of placeholders for SQL
                 val placeholders = taskTags.joinToString(separator = ",") { "(?, ?)" }
@@ -202,11 +197,9 @@ class TaskDatabaseManager(private val context: Context) {
                 // Execute the SQL statement with arguments
                 database.execSQL(sql, arrayOf(args))
             }
-        }
     }
 
-    suspend fun updateTask(taskItem: TaskItem) {
-        withContext(Dispatchers.IO) {
+    fun updateTask(taskItem: TaskItem) {
             database.execSQL(
                 //query
                 """
@@ -226,11 +219,9 @@ class TaskDatabaseManager(private val context: Context) {
                     taskItem.priority
                 )
             )
-        }
     }
 
-    suspend fun updateTag(taskTag: TaskTag) {
-        withContext(Dispatchers.IO) {
+    fun updateTag(taskTag: TaskTag) {
             database.execSQL(
                 //query
                 """
@@ -245,11 +236,9 @@ class TaskDatabaseManager(private val context: Context) {
                     taskTag.desc
                 )
             )
-        }
     }
 
-    suspend fun deleteTask(taskItem: TaskItem) {
-        withContext(Dispatchers.IO) {
+    fun deleteTask(taskItem: TaskItem) {
             database.execSQL(
                 //query
                 """
@@ -262,11 +251,9 @@ class TaskDatabaseManager(private val context: Context) {
                     taskItem.id
                 )
             )
-        }
     }
 
-    suspend fun deleteTag(taskTag: TaskTag) {
-        withContext(Dispatchers.IO) {
+    fun deleteTag(taskTag: TaskTag) {
             database.execSQL(
                 //query
                 """
@@ -279,11 +266,9 @@ class TaskDatabaseManager(private val context: Context) {
                     taskTag.id
                 )
             )
-        }
     }
 
-    suspend fun deleteTaskTagRelations(taskItem: TaskItem, taskTags: List<TaskTag>) {
-        withContext(Dispatchers.IO) {
+    fun deleteTaskTagRelations(taskItem: TaskItem, taskTags: List<TaskTag>) {
             if (taskTags.isNotEmpty()) {
                 // Create a comma-separated list of placeholders for SQL
                 val placeholders = taskTags.joinToString(separator = ",") { "?" }
@@ -303,10 +288,9 @@ class TaskDatabaseManager(private val context: Context) {
                 // Execute the SQL statement with arguments
                 database.execSQL(sql, arrayOf(args))
             }
-        }
     }
 
-    suspend fun getAllTasks(): MutableList<TaskItem> = withContext(Dispatchers.IO)
+    fun getAllTasks(): MutableList<TaskItem>
     {
         //get tasks
         val query = "SELECT * FROM $TASKS_TABLE"
@@ -335,10 +319,10 @@ class TaskDatabaseManager(private val context: Context) {
             tasks[taskID]!!.tags.add(taskTag)
 
         // Update LiveData
-        tasks.values.toMutableList()
+        return tasks.values.toMutableList()
     }
 
-    suspend fun getAllTags(): MutableList<TaskTag> = withContext(Dispatchers.IO)
+    fun getAllTags(): MutableList<TaskTag>
     {
         //run query
         val query = "SELECT * FROM $TAGS_TABLE"
@@ -357,7 +341,7 @@ class TaskDatabaseManager(private val context: Context) {
         }
 
         //return tags
-        tags
+        return tags
     }
 
     private fun getTags (taskIDs: Set<Int>): MutableList<Pair<Int, TaskTag>>{

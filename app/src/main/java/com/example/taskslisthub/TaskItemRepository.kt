@@ -77,7 +77,7 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
     @WorkerThread
     suspend fun addTaskItem(taskItem: TaskItem)
     {
-        _googleTasksManager.newTask(taskItem) //must be run before other methods as it updates the googleId
+        val taskItemWithGoogleId = _googleTasksManager.newTask(taskItem) //must be run before other methods as it updates the googleId
         val taskItemWithId = db.insertTask(taskItem)
         _taskItemStore.add(taskItemWithId)
         postTaskValues()

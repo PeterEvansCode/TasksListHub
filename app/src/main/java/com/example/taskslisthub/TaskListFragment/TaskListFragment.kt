@@ -36,6 +36,10 @@ class TaskListFragment(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        //initialise google tasks API
+        taskViewModel.setGoogleAccount(requireContext())
+
+        //initialise binding
         binding = FragmentMainTaskListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -61,7 +65,7 @@ class TaskListFragment(
     }
 
     private fun setRecyclerView() {
-        var mainTaskListFragment = this
+        val mainTaskListFragment = this
         taskViewModel.taskItems.observe(viewLifecycleOwner) {
 
             //if inside a tag folder, only show tasks relating to that tag

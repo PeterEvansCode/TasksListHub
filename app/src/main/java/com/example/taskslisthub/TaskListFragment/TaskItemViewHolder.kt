@@ -66,7 +66,7 @@ class TaskItemViewHolder(
     private fun createTagTextView(tag: TaskTag): TextView {
         val textView = TextView(context)
         textView.text = tag.name
-        textView.setBackgroundResource(R.drawable.tag_background) // Optional styling
+        //textView.setBackgroundResource(R.drawable.tag_background) // Optional styling
         textView.setPadding(8, 4, 8, 4)  // Optional padding
         return textView
     }

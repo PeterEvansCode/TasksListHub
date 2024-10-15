@@ -40,7 +40,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tagRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"/>
 
@@ -48,7 +48,7 @@
         android:id="@+id/newTagButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/baseline_add_24"
+        android:drawableStart="@drawable/baseline_add_24"
         android:text="@string/new_tag_button" />
 
 </LinearLayout>
