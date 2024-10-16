@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.taskslisthub.TagSelectionFragment.ITaskTagClickListener
 import com.example.taskslisthub.TagSelectionFragment.TaskTagViewHolder
 import com.example.taskslisthub.databinding.TaskTagCellBinding
+import com.example.taskslisthub.databinding.TaskTagMenuCellBinding
 import com.example.taskslisthub.models.TaskTag
 
 /**
@@ -21,7 +22,7 @@ class TaskTagAdapter(
 ) : RecyclerView.Adapter<TaskTagViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskTagViewHolder {
-        val binding = TaskTagCellBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = TaskTagMenuCellBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TaskTagViewHolder(binding, clickListener)
     }
 

@@ -123,7 +123,7 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
     }
 
     @WorkerThread
-    suspend fun addTagsToTask(taskItem: TaskItem, taskTags: List<TaskTag>): TaskItem
+    fun addTagsToTask(taskItem: TaskItem, taskTags: List<TaskTag>): TaskItem
     {
         //add to task object
         for(taskTag in taskTags) taskItem.tags.add(taskTag)
@@ -138,7 +138,7 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
     }
 
     @WorkerThread
-    suspend fun removeTagsFromTask(taskItem: TaskItem, taskTags: List<TaskTag>): TaskItem
+    fun removeTagsFromTask(taskItem: TaskItem, taskTags: List<TaskTag>): TaskItem
     {
         //remove from task object
         for(taskTag in taskTags) taskItem.tags.remove(taskTag)

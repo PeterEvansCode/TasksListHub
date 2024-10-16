@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/tagCellContainer"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="8dp"
-    android:backgroundTint="?attr/colorSurface">
-
-    <CheckBox
-        android:id="@+id/tagCheckbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    android:background="@drawable/tag_background">
 
     <TextView
-        android:id="@+id/tagName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:textAppearance="?attr/textAppearanceListItem"
-        android:text="@string/place_holder"/>
+        android:id="@+id/tagTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Tag Name"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="40dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:gravity="center" />
 </LinearLayout>

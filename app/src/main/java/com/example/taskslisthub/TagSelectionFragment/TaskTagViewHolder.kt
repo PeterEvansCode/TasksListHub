@@ -2,10 +2,11 @@ package com.example.taskslisthub.TagSelectionFragment
 
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskslisthub.databinding.TaskTagCellBinding
+import com.example.taskslisthub.databinding.TaskTagMenuCellBinding
 import com.example.taskslisthub.models.TaskTag
 
 class TaskTagViewHolder(
-    private val binding: TaskTagCellBinding,
+    private val binding: TaskTagMenuCellBinding,
     private val clickListener: ITaskTagClickListener
 ): RecyclerView.ViewHolder(binding.root){
     fun bindTaskTag(taskTag: TaskTag, isAssignedToTask: Boolean){

@@ -2,11 +2,14 @@ package com.example.taskslisthub.TaskListFragment
 
 import android.content.Context
 import android.graphics.Paint
+import android.view.LayoutInflater
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskslisthub.R
 import com.example.taskslisthub.Utilities
 import com.example.taskslisthub.databinding.TaskItemCellBinding
+import com.example.taskslisthub.databinding.TaskTagCellBinding
 import com.example.taskslisthub.models.TaskItem
 import com.example.taskslisthub.models.TaskTag
 
@@ -63,11 +66,14 @@ class TaskItemViewHolder(
         }
     }
 
-    private fun createTagTextView(tag: TaskTag): TextView {
-        val textView = TextView(context)
-        textView.text = tag.name
-        //textView.setBackgroundResource(R.drawable.tag_background) // Optional styling
-        textView.setPadding(8, 4, 8, 4)  // Optional padding
-        return textView
+    private fun createTagTextView(tag: TaskTag): LinearLayout {
+        // Create the binding for tag_item.xml
+        val binding = TaskTagCellBinding.inflate(LayoutInflater.from(context))
+
+        // Set the tag name using the binding
+        binding.tagTextView.text = tag.name
+
+        // Return the root view (the inflated layout)
+        return binding.root
     }
 }

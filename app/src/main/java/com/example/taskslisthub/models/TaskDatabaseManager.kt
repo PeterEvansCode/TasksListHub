@@ -5,8 +5,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import com.example.taskslisthub.TasksListHub
 import com.example.taskslisthub.models.taskStores.HashOnID
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 class TaskDatabaseManager(private val context: Context) {
     //general constants
@@ -43,7 +41,6 @@ class TaskDatabaseManager(private val context: Context) {
     }
 
     init {
-        deleteDatabase()
         //create a database if one doesn't already exist
         database = try {
             if (TasksListHub.DEBUG) deleteDatabase()
@@ -195,7 +192,7 @@ class TaskDatabaseManager(private val context: Context) {
                 }
 
                 // Execute the SQL statement with arguments
-                database.execSQL(sql, arrayOf(args))
+                database.execSQL(sql, args.toTypedArray())
             }
     }
 
@@ -351,19 +348,55 @@ class TaskDatabaseManager(private val context: Context) {
 
         // Create a parameterized IN clause based on the number of task IDs
         val placeholders = taskIDs.joinToString(",") { "?" }
-
-        val cursor = database.rawQuery(
-            """
+        val query = """
             SELECT $TAGS_TABLE.$TAG_ID, $TAGS_TABLE.$TAG_NAME, $TAGS_TABLE.$TAG_DESC, $TASKS_TAGS_TABLE.$TASKS_TAGS_TASKS_ID
             FROM $TAGS_TABLE
             INNER JOIN $TASKS_TAGS_TABLE ON $TAGS_TABLE.$TAG_ID = $TASKS_TAGS_TABLE.$TASKS_TAGS_TAGS_ID
             WHERE $TASKS_TAGS_TABLE.$TASKS_TAGS_TASKS_ID IN ($placeholders)
-            """.trimIndent(),
+            """.trimIndent()
 
-            arrayOf(
-                taskIDs.toString()
-            )
-        )
+        val args = taskIDs.map { it.toString() }.toTypedArray()
+
+        val cursor = database.rawQuery(query, args)
+
+        //save as taskTag objects
+        cursor.use {
+            while (cursor.moveToNext()) {
+                val taskId = cursor.getInt(cursor.getColumnIndexOrThrow(TASKS_TAGS_TASKS_ID))
+                val tagId = cursor.getInt(cursor.getColumnIndexOrThrow(TAG_ID))
+                val tagName = cursor.getString(cursor.getColumnIndexOrThrow(TAG_NAME))
+                val tagDesc = cursor.getString(cursor.getColumnIndexOrThrow(TAG_DESC))
+                tags.add(Pair(taskId, TaskTag(id = tagId, name = tagName, desc = tagDesc))) // Assuming you have a Tag class
+            }
+        }
+
+        val numLines = reportTaskTagRelations()
+        val allRelationsAsTags = getAllTaskTagRelationsAsTags()
+        val allRelations = getAllTaskTagRelations()
+
+        return tags
+    }
+
+    fun reportTaskTagRelations(): Int{
+        val cursor = database.rawQuery("SELECT COUNT(*) FROM $TASKS_TAGS_TABLE", null)
+
+        cursor.moveToFirst() // Ensure the cursor is pointing to the result
+        val count = cursor.getInt(0) // Get the first column of the result, which is the count
+        cursor.close() // Always close the cursor when done
+        return count
+    }
+
+    private fun getAllTaskTagRelationsAsTags (): MutableList<Pair<Int, TaskTag>>{
+        val tags = mutableListOf<Pair<Int, TaskTag>>() // Pair of taskId and Tag
+
+        val query = """
+            SELECT *
+            FROM $TAGS_TABLE
+            INNER JOIN $TASKS_TAGS_TABLE ON $TAGS_TABLE.$TAG_ID = $TASKS_TAGS_TABLE.$TASKS_TAGS_TAGS_ID
+            """.trimIndent()
+
+
+        val cursor = database.rawQuery(query, null)
 
         //save as taskTag objects
         cursor.use {
@@ -377,5 +410,26 @@ class TaskDatabaseManager(private val context: Context) {
         }
 
         return tags
+    }
+
+    private fun getAllTaskTagRelations (): MutableList<Pair<Int, Int>>{
+        val relations = mutableListOf<Pair<Int, Int>>() // Pair of taskId and Tag
+
+        val query = """
+            SELECT *
+            FROM $TASKS_TAGS_TABLE
+            """.trimIndent()
+
+
+        val cursor = database.rawQuery(query, null)
+
+        //save as taskTag objects
+        cursor.use {
+            while (cursor.moveToNext()) {
+                relations.add(Pair(cursor.getInt(cursor.getColumnIndexOrThrow(TASKS_TAGS_TASKS_ID)), cursor.getInt(cursor.getColumnIndexOrThrow(TASKS_TAGS_TAGS_ID))))
+            }
+        }
+
+        return relations
     }
 }
