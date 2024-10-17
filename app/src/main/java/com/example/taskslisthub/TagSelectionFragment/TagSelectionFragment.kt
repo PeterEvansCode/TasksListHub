@@ -9,16 +9,19 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskslisthub.NewTagSheet
+import com.example.taskslisthub.R
 import com.example.taskslisthub.TaskTagAdapter
 import com.example.taskslisthub.TasksListHub
 import com.example.taskslisthub.databinding.FragmentTagSelectionBinding
 import com.example.taskslisthub.models.TaskItem
 import com.example.taskslisthub.models.TaskTag
 import com.example.taskslisthub.models.taskStores.HashOnID
+import com.example.taskslisthub.models.taskStores.TaskItemStore
 
 
 class TagSelectionFragment(var taskItem: TaskItem) : DialogFragment(), ITaskTagClickListener
@@ -136,12 +139,44 @@ class TagSelectionFragment(var taskItem: TaskItem) : DialogFragment(), ITaskTagC
         else _tagsToRemove.add(taskTag)
     }
 
+    override fun openMenu(view: View, taskTag: TaskTag) {
+
+        // Create a PopupMenu
+        val popupMenu = PopupMenu(requireContext(), view)
+        // Inflate the menu resource
+        popupMenu.menuInflater.inflate(R.menu.tag_popup, popupMenu.menu)
+        // Set a click listener for menu items
+        popupMenu.setOnMenuItemClickListener { item ->
+            var returnVal = false
+            when (item.itemId) {
+                R.id.delete_button -> {
+                    tagSelectionViewModel.deleteTaskTag(taskTag)
+
+                    returnVal = true
+                }
+
+                R.id.edit_button -> {
+                    // Display sheet to edit tag
+                    NewTagSheet(taskTag).show(parentFragmentManager, "editTaskTag")
+
+                    returnVal = true
+                }
+
+                else -> returnVal = false
+            }
+            returnVal
+        }
+        // Show the menu
+        popupMenu.show()
+    }
+
+
     //screen dimensions
-    fun getScreenWidth(): Int {
+    private fun getScreenWidth(): Int {
         return Resources.getSystem().displayMetrics.widthPixels
     }
 
-    fun getScreenHeight(): Int {
+    private fun getScreenHeight(): Int {
         return Resources.getSystem().displayMetrics.heightPixels
     }
 

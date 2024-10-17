@@ -25,13 +25,10 @@ class TaskItemViewHolder(
 
         //if completed, show task as completed
         if(taskItem.isCompleted()){
+            binding.completeButton.setImageResource(R.drawable.checked_24)
             binding.name.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
             binding.dueText.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         }
-
-
-        binding.completeButton.setImageResource(taskItem.getImageResource())
-        binding.completeButton.setColorFilter(taskItem.getImageColor(context))
 
         binding.completeButton.setOnClickListener{
             clickListener.toggleCompleteTaskItem(taskItem)

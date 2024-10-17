@@ -1,24 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     android:id="@+id/tagCellContainer"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:padding="8dp"
-    android:backgroundTint="?attr/colorSurface">
+    android:backgroundTint="?attr/colorSurface"
+    android:layout_marginTop="10dp"
+    android:layout_marginStart="10dp">
 
     <CheckBox
-        android:id="@+id/tagCheckbox"
+        android:id="@+id/tag_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:buttonTint="?attr/colorPrimary"/>
+        android:buttonTint="?attr/colorPrimary"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        />
 
     <TextView
-        android:id="@+id/tagName"
+        android:id="@+id/tag_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:textAppearance="?attr/textAppearanceListItem"
-        android:text="@string/place_holder"/>
-</LinearLayout>
+        android:text="@string/place_holder"
+        android:layout_toEndOf="@id/tag_checkbox"
+        android:layout_marginStart="8dp"
+        android:layout_centerVertical="true"/>
+
+    <ImageButton
+        style="@style/ButtonStyleSubtle"
+        android:id="@+id/menu_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:contentDescription="Menu"
+        android:layout_marginHorizontal="15dp"
+        android:src="@drawable/dot_menu"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        />
+
+</RelativeLayout>

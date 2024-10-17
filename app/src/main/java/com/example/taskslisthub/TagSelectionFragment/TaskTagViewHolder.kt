@@ -25,5 +25,10 @@ class TaskTagViewHolder(
         binding.tagCellContainer.setOnClickListener{
             binding.tagCheckbox.performClick()
         }
+
+        //tag menu binding
+        binding.menuButton.setOnClickListener {
+            clickListener.openMenu(binding.menuButton, taskTag)
+        }
     }
 }

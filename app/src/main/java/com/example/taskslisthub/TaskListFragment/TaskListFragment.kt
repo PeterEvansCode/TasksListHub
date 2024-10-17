@@ -68,10 +68,18 @@ class TaskListFragment(
         val mainTaskListFragment = this
         taskViewModel.taskItems.observe(viewLifecycleOwner) {
 
+            //sort tags first by completed, then by given sort
+            val incompleteTasks = it.filter { taskItem ->  !taskItem.isCompleted()}
+            val completedTasks = it.filter { taskItem ->  taskItem.isCompleted()}
+            var tasksToDisplay = incompleteTasks + completedTasks
+
             //if inside a tag folder, only show tasks relating to that tag
-            var tasksToDisplay = it
-            if (tagFilter != null) tasksToDisplay = it.filter { item -> item.tags.containsKey(tagFilter.id) }
-            else if (priorityFilter >= 0) tasksToDisplay = it.filter { item -> item.priority == priorityFilter }
+            if (tagFilter != null){
+                tasksToDisplay = it.filter { taskItem -> taskItem.tags.containsKey(tagFilter.id) }
+            }
+            else if (priorityFilter >= 0) {
+                tasksToDisplay = it.filter { item -> item.priority == priorityFilter }
+            }
 
             //display tasks
             binding.todoListRecyclerView.apply {

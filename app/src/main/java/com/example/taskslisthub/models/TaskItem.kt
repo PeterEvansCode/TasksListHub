@@ -67,13 +67,6 @@ class TaskItem(
     //check if task has been completed
     fun isCompleted() = formatCompletedDate() != null
 
-    //UI information
-    //PROBABLY SHOULDN'T BE IN THE MODEL
-    fun getImageResource(): Int = if(isCompleted()) R.drawable.checked_24 else R.drawable.unchecked_24
-    fun getImageColor(context: Context): Int = if(isCompleted()) purple(context) else black(context)
-    private fun purple(context: Context) = ContextCompat.getColor(context, R.color.purple_500)
-    private fun black(context: Context) = ContextCompat.getColor(context, R.color.black)
-
     //date and time formatters
     companion object{
         val timeFormatter: DateTimeFormatter = DateTimeFormatter.ISO_TIME

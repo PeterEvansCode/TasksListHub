@@ -22,6 +22,7 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
     //API handler for google tasks
     private val _googleTasksManager = GoogleTasksManager()
 
+    //TAGS--------------------------------
     //makes all taskTags visible to the UI
     private val _taskTagStore = RecordStore<TaskTag>()
 
@@ -33,6 +34,10 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
     private val _allTagsLiveData = MutableLiveData<List<TaskTag>>()
     val allTagsLiveData: LiveData<List<TaskTag>> get() = _filteredTagsLiveData
 
+    //for easy access of taskItems based on their tags
+    private val _hashOnTags = HashMap<TaskTag, MutableSet<TaskItem>>()
+
+    //TASKS--------------------------------
     //makes all taskItems visible to the UI
     private val _taskItemStore = TaskItemStore()
 
@@ -77,8 +82,13 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
     @WorkerThread
     suspend fun addTaskItem(taskItem: TaskItem)
     {
+        //google tasks
         val taskItemWithGoogleId = _googleTasksManager.newTask(taskItem) //must be run before other methods as it updates the googleId
-        val taskItemWithId = db.insertTask(taskItem)
+
+        //database
+        val taskItemWithId = db.insertTask(taskItemWithGoogleId)
+
+        //task store
         _taskItemStore.add(taskItemWithId)
         postTaskValues()
     }
@@ -86,7 +96,13 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
     @WorkerThread
     suspend fun addTaskTag(taskTag: TaskTag)
     {
+        //database
         val taskTagWithId = db.insertTag(taskTag)
+
+        //hashmap
+        _hashOnTags[taskTag] = mutableSetOf()
+
+        //tag store
         _taskTagStore.add(taskTagWithId)
         postTagValues()
     }
@@ -94,8 +110,16 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
     @WorkerThread
     suspend fun deleteTaskItem(taskItem: TaskItem)
     {
+        //google tasks
         _googleTasksManager.deleteTask(taskItem)
+
+        //hashmap
+        for (taskTag in taskItem.tags.values) _hashOnTags[taskTag]?.remove(taskItem)
+
+        //database
         db.deleteTask(taskItem)
+
+        //task store
         _taskItemStore.remove(taskItem)
         postTaskValues()
     }
@@ -103,9 +127,18 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
     @WorkerThread
     suspend fun deleteTaskTag(taskTag: TaskTag)
     {
+        //database
         db.deleteTag(taskTag)
+
+        //hashmap and related tasks
+        if (_hashOnTags[taskTag] != null) for(taskItem in _hashOnTags[taskTag]!!.toList()) taskItem.tags.remove(taskTag)
+        _hashOnTags.remove(taskTag)
+
+        //tag store
         _taskTagStore.remove(taskTag)
+
         postTagValues()
+        postTaskValues()
     }
 
     @WorkerThread
@@ -128,6 +161,9 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
         //add to task object
         for(taskTag in taskTags) taskItem.tags.add(taskTag)
 
+        //add to hashmap
+        for(taskTag in taskTags) taskItem.tags.add(taskTag)
+
         //update database
         db.insertTaskTagRelations(taskItem, taskTags)
 
@@ -141,6 +177,9 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
     fun removeTagsFromTask(taskItem: TaskItem, taskTags: List<TaskTag>): TaskItem
     {
         //remove from task object
+        for(taskTag in taskTags) taskItem.tags.remove(taskTag)
+
+        //add to hashmap
         for(taskTag in taskTags) taskItem.tags.remove(taskTag)
 
         //update database
