@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:text="Tag Name"
         android:textColor="?attr/colorOnSurface"
-        android:textSize="40dp"
+        android:textSize="20sp"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
         android:paddingTop="4dp"

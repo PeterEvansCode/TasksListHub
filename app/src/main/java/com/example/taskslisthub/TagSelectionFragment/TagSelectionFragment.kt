@@ -2,6 +2,7 @@ package com.example.taskslisthub.TagSelectionFragment
 
 import android.app.Dialog
 import android.content.DialogInterface
+import android.content.res.Resources
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,8 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskslisthub.NewTagSheet
 import com.example.taskslisthub.TaskTagAdapter
 import com.example.taskslisthub.TasksListHub
@@ -18,6 +19,7 @@ import com.example.taskslisthub.databinding.FragmentTagSelectionBinding
 import com.example.taskslisthub.models.TaskItem
 import com.example.taskslisthub.models.TaskTag
 import com.example.taskslisthub.models.taskStores.HashOnID
+
 
 class TagSelectionFragment(var taskItem: TaskItem) : DialogFragment(), ITaskTagClickListener
 {
@@ -78,6 +80,17 @@ class TagSelectionFragment(var taskItem: TaskItem) : DialogFragment(), ITaskTagC
         setRecyclerView()
     }
 
+    override fun onResume() {
+        super.onResume()
+        val width = getScreenWidth()
+        val height = getScreenHeight()
+
+        val dialogWidth = (width * 0.8).toInt()
+        val dialogHeight = (height * 0.8).toInt()
+
+        dialog!!.window!!.setLayout(dialogWidth, dialogHeight)
+    }
+
     private fun setRecyclerView() {
         var tagSelectionFragment = this
         tagSelectionViewModel.taskTags.observe(viewLifecycleOwner) { allTags ->
@@ -122,4 +135,14 @@ class TagSelectionFragment(var taskItem: TaskItem) : DialogFragment(), ITaskTagC
         if (_tagsToAdd.existId(taskTag.id)) _tagsToAdd.remove(taskTag)
         else _tagsToRemove.add(taskTag)
     }
+
+    //screen dimensions
+    fun getScreenWidth(): Int {
+        return Resources.getSystem().displayMetrics.widthPixels
+    }
+
+    fun getScreenHeight(): Int {
+        return Resources.getSystem().displayMetrics.heightPixels
+    }
+
 }
