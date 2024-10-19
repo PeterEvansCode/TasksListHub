@@ -21,7 +21,7 @@
             android:paddingVertical="1dp">
 
             <ImageButton
-                style="@style/ButtonStyleSubtle"
+                style="@style/button_style_subtle"
                 android:id="@+id/complete_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
                 />
 
             <ImageButton
-                style="@style/ButtonStyleSubtle"
+                style="@style/button_style_subtle"
                 android:id="@+id/delete_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
             </com.google.android.flexbox.FlexboxLayout>
 
             <Button
-                style="@style/ButtonStyle"
+                style="@style/button_style"
                 android:id="@+id/add_tag_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

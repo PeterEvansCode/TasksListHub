@@ -4,12 +4,13 @@
 
     <!-- Drawer Button -->
     <ImageButton
-        style="@style/ButtonStyleSubtle"
+        style="@style/button_style_subtle"
         android:id="@+id/drawer_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/drawer_menu_24"
         android:contentDescription="@string/menu"
-        android:padding="8dp"/>
+        android:padding="8dp"
+        />
 
 </merge>

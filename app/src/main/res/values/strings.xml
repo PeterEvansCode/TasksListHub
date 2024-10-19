@@ -23,6 +23,7 @@
     <string name="cancel_choose_time">Leave Time Blank</string>
     <string name="confirm_choose_time">OK</string>
     <string name="menu">Drawer Menu</string>
+    <string name="settings_title">Settings</string>
 
     <string-array name="theme_options">
         <item>System Default</item>

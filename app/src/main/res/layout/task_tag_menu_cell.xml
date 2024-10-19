@@ -29,7 +29,7 @@
         android:layout_centerVertical="true"/>
 
     <ImageButton
-        style="@style/ButtonStyleSubtle"
+        style="@style/button_style_subtle"
         android:id="@+id/menu_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

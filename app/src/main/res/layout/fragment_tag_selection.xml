@@ -15,7 +15,7 @@
         android:layout_marginEnd="10dp">
 
         <ImageButton
-            style="@style/ButtonStyleSubtle"
+            style="@style/button_style_subtle"
             android:id="@+id/tagBackButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

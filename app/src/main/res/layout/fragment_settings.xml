@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".SettingsFragment.SettingsFragment">
 
+    <!-- Header with Drawer Button and Title -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="16dp">
 
         <com.example.taskslisthub.DrawerButton
             android:id="@+id/settings_drawer_button"
@@ -18,25 +21,29 @@
             android:layout_alignParentStart="true"/>
 
         <TextView
-            style="@style/Title"
+            style="@style/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Settings"
-            android:layout_gravity="center"
-            android:layout_toEndOf="@+id/settings_drawer_button"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/settings_drawer_button"
             />
     </RelativeLayout>
 
+    <!-- Fragment Container for Google Login -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/google_login_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:name="com.example.taskslisthub.SettingsFragment.GoogleLoginFragment"/>
+        android:name="com.example.taskslisthub.SettingsFragment.GoogleLoginFragment"
+        android:layout_marginTop="16dp" />
 
+    <!-- Fragment Container for Personalisation -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/personalise_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:name="com.example.taskslisthub.SettingsFragment.PersonaliseFragment"/>
+        android:name="com.example.taskslisthub.SettingsFragment.PersonaliseFragment"
+        android:layout_marginTop="16dp" />
 
 </LinearLayout>

@@ -47,7 +47,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <ImageButton
-                style="@style/ButtonStyleSubtle"
+                style="@style/button_style_subtle"
                 android:id="@+id/sort_button"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -71,7 +71,7 @@
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        style="@style/ButtonStyle"
+        style="@style/button_style"
         android:id="@+id/newTaskButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

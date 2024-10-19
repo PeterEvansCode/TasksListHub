@@ -5,58 +5,68 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- Section Title -->
     <TextView
+        style="heading_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Personalisation"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp" />
+        android:text="Personalisation"/>
 
+    <!-- Divider Line -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?attr/colorOnBackground" />
+        android:background="?attr/colorOnBackground"
+        android:layout_marginVertical="8dp" />
 
+    <!-- Theme Selection -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
 
         <TextView
+            style="@style/heading_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Select Theme"
             android:textSize="18sp"
-            android:layout_marginBottom="16dp"/>
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp" />
 
         <Spinner
             android:id="@+id/theme_spinner"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:entries="@array/theme_options"/>
     </LinearLayout>
 
+    <!-- Accent Colour Selection -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
 
         <TextView
+            style="@style/heading_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Select Accent Colour"
             android:textSize="18sp"
-            android:layout_marginBottom="16dp"/>
+            android:layout_gravity="center_vertical"
+        android:layout_marginEnd="8dp" />
 
         <Button
             android:id="@+id/change_color_button"
             android:backgroundTint="?attr/colorPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="end"/>
-
+            android:gravity="center"
+            android:text="Change Colour"
+            android:padding="8dp" />
     </LinearLayout>
 
 </LinearLayout>
