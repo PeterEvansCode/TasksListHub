@@ -213,9 +213,13 @@ class TaskDatabaseManager(private val context: Context) {
                     taskItem.dueTimeString,
                     taskItem.dueDateString,
                     taskItem.completedDateString,
-                    taskItem.priority
+                    taskItem.priority,
+                    taskItem.id
                 )
             )
+
+        val debug = getAllTasks()
+        val debug2 = null
     }
 
     fun updateTag(taskTag: TaskTag) {
@@ -230,7 +234,8 @@ class TaskDatabaseManager(private val context: Context) {
                 //arguments
                 arrayOf(
                     taskTag.name,
-                    taskTag.desc
+                    taskTag.desc,
+                    taskTag.id
                 )
             )
     }
@@ -369,10 +374,6 @@ class TaskDatabaseManager(private val context: Context) {
                 tags.add(Pair(taskId, TaskTag(id = tagId, name = tagName, desc = tagDesc))) // Assuming you have a Tag class
             }
         }
-
-        val numLines = reportTaskTagRelations()
-        val allRelationsAsTags = getAllTaskTagRelationsAsTags()
-        val allRelations = getAllTaskTagRelations()
 
         return tags
     }
