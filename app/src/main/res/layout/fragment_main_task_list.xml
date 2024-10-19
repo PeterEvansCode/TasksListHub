@@ -11,83 +11,56 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.example.taskslisthub.CustomToolbar
+        <RelativeLayout
             android:id="@+id/task_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/ThemeOverlay.Material3.AutoCompleteTextView.OutlinedBox.Dense"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:layout_marginEnd="10dp"
-                    android:padding="10dp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/task_search_bar"
-                        android:hint="Search"
-                        android:textColor="@color/white"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageButton
-                    style="@style/ButtonStyleSubtle"
-                    android:id="@+id/sort_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:scaleX="1"
-                    android:scaleY="1"
-                    android:contentDescription="@string/sort_button"
-                    android:layout_marginHorizontal="15dp"
-                    android:src="@drawable/baseline_sort_24"/>
-
-            <!--RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                android:layout_marginHorizontal="20dp">
+            <com.example.taskslisthub.DrawerButton
+                android:id="@+id/task_drawer_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="10dp"
+                />
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/task_search_bar_container"
                 style="@style/ThemeOverlay.Material3.AutoCompleteTextView.OutlinedBox.Dense"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_toStartOf="@id/sort_button"
-                android:layout_toEndOf="@id/sort_button"
-                android:layout_marginEnd="10dp">
+                android:layout_toEndOf="@id/task_drawer_button"
+                android:layout_alignParentEnd="true"
+                android:padding="5dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/task_search_bar"
+                    android:layout_width="292dp"
+                    android:layout_height="match_parent"
                     android:hint="Search"
                     android:textColor="@color/white"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_toEndOf="@id/task_drawer_button"
+                    android:layout_alignParentEnd="true"
+                    />
             </com.google.android.material.textfield.TextInputLayout>
 
             <ImageButton
                 style="@style/ButtonStyleSubtle"
                 android:id="@+id/sort_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginStart="10dp"
                 android:layout_gravity="center"
-                android:scaleX="1"
-                android:scaleY="1"
                 android:contentDescription="@string/sort_button"
                 android:layout_marginHorizontal="15dp"
                 android:src="@drawable/baseline_sort_24"
-                android:backgroundTint="@android:color/transparent"/>
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                />
 
-            </RelativeLayout-->
-
-        </com.example.taskslisthub.CustomToolbar>
+        </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"

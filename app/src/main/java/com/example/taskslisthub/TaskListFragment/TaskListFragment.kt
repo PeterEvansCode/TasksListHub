@@ -56,7 +56,7 @@ class TaskListFragment(
         // Bind toolbar with activity's drawer layout
         (activity as? AppCompatActivity)?.let { appCompatActivity ->
             val drawerLayout = appCompatActivity.findViewById<DrawerLayout>(R.id.drawer_layout)
-            binding.taskToolbar.bindWithDrawerLayout(appCompatActivity, drawerLayout)
+            binding.taskDrawerButton.bindWithDrawerLayout(appCompatActivity, drawerLayout)
         }
 
         setRecyclerView()
@@ -171,6 +171,6 @@ class TaskListFragment(
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding.taskToolbar.cleanUp()
+        binding.taskDrawerButton.cleanUp()
     }
 }

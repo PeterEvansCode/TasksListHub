@@ -3,23 +3,21 @@ package com.example.taskslisthub
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.example.taskslisthub.databinding.AppToolbarBinding
+import com.example.taskslisthub.databinding.DrawerButtonBinding
 import com.google.android.material.navigation.NavigationView
 
-class CustomToolbar @JvmOverloads constructor(
+class DrawerButton @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
-    private lateinit var binding: AppToolbarBinding
+    private lateinit var binding: DrawerButtonBinding
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
 
@@ -27,7 +25,7 @@ class CustomToolbar @JvmOverloads constructor(
         orientation = HORIZONTAL
         // Inflate custom toolbar layout
         val inflater = LayoutInflater.from(context)
-        binding = AppToolbarBinding.inflate(inflater, this)
+        binding = DrawerButtonBinding.inflate(inflater, this)
 
         // Handle drawer button behavior using ViewBinding
         binding.drawerButton.setOnClickListener {
@@ -48,9 +46,5 @@ class CustomToolbar @JvmOverloads constructor(
 
     fun cleanUp(){
         drawerLayout.removeDrawerListener(toggle)
-    }
-
-    fun addCustomView(view: View) {
-        binding.customContainer.addView(view)
     }
 }

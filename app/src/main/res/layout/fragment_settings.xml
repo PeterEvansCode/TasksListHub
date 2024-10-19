@@ -6,10 +6,16 @@
     android:orientation="vertical"
     tools:context=".SettingsFragment.SettingsFragment">
 
-    <com.example.taskslisthub.CustomToolbar
-        android:id="@+id/toolbar"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <com.example.taskslisthub.DrawerButton
+            android:id="@+id/settings_drawer_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="5dp"
+            android:layout_alignParentStart="true"/>
 
         <TextView
             style="@style/Title"
@@ -17,8 +23,9 @@
             android:layout_height="wrap_content"
             android:text="Settings"
             android:layout_gravity="center"
+            android:layout_toEndOf="@+id/settings_drawer_button"
             />
-    </com.example.taskslisthub.CustomToolbar>
+    </RelativeLayout>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/google_login_container"
