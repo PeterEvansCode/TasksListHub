@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -150,8 +151,14 @@ class TagSelectionFragment(var taskItem: TaskItem) : DialogFragment(), ITaskTagC
             var returnVal = false
             when (item.itemId) {
                 R.id.delete_button -> {
+                    //remove tag references
+                    if(_tagsToRemove.containsKey(taskTag.id)) _tagsToRemove.remove(taskTag)
+                    else if(_tagsToAdd.containsKey(taskTag.id)) _tagsToAdd.remove(taskTag)
+
+                    //delete tag
                     tagSelectionViewModel.deleteTaskTag(taskTag)
 
+                    //successfully completed
                     returnVal = true
                 }
 

@@ -1,6 +1,7 @@
 package com.example.taskslisthub
 
 import android.graphics.Color
+import android.widget.Toast
 import java.time.LocalDate
 import java.time.LocalTime
 import java.util.Locale
@@ -205,6 +206,14 @@ class Utilities {
                 dateString,
                 timeString
             )
+        }
+
+
+        private val _illegalCharacters = arrayOf("DELETE", "INSERT", "UPDATE", "PUT", "*", "\"")
+        fun validateString(s: String): String?{
+            return _illegalCharacters.firstOrNull {
+                s.contains(it)
+            }
         }
     }
 }

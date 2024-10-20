@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.taskslisthub.TagSelectionFragment.TagSelectionViewModel
 import com.example.taskslisthub.databinding.FragmentNewTagSheetBinding
@@ -61,51 +62,60 @@ class NewTagSheet(var taskTag: TaskTag?) : BottomSheetDialogFragment() {
         binding.saveButton.setOnClickListener {
             saveAction()
         }
-
-        // save button is disabled while no title has been entered
-        updateSaveButtonState()
-        binding.name.addTextChangedListener(object : TextWatcher {
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                updateSaveButtonState()
-            }
-
-            //necessary overrides (no functionality)
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun afterTextChanged(s: Editable?) {}
-        })
     }
 
     private fun saveAction() {
         //save data from sheet
         val name = binding.name.text.toString()
         val desc = binding.desc.text.toString()
-        val dueTimeString = dueTime?.let { TaskItem.timeFormatter.format(it) }
 
-        //create new task item if one doesn't already exist
-        if (taskTag == null) {
-            val newTag = TaskTag(name = name, desc = desc)
-            tagSelectionViewModel.addTaskTag(newTag)
+        if(name == "") {
+            Toast.makeText(requireContext(), "Name cannot be blank", Toast.LENGTH_SHORT)
+                .show()
+
         }
 
-        //save data in taskItem
-        else {
-            taskTag!!.name = name
-            taskTag!!.desc = desc
-            tagSelectionViewModel.editTaskTag(taskTag!!)
+        else if (
+        //check if name contains illegal strings
+            Utilities.validateString(name)?.let { illegalCharacter ->
+                //if so, inform user of invalid string
+                Toast.makeText(requireContext(), "Name cannot contain \"$illegalCharacter\"", Toast.LENGTH_SHORT)
+                    .show()
+
+                //return a bool value to satisfy the if statement
+                true } == true
+        )
+
+        else if (
+        //check if description contains illegal strings
+            Utilities.validateString(desc)?.let { illegalCharacter ->
+                //if so, inform user of invalid string
+                Toast.makeText(requireContext(), "Description cannot contain \"$illegalCharacter\"", Toast.LENGTH_SHORT)
+                    .show()
+
+                //return a bool value to satisfy the if statement
+                true } == true
+        )
+
+        else{
+            //create new task item if one doesn't already exist
+            if (taskTag == null) {
+                val newTag = TaskTag(name = name, desc = desc)
+                tagSelectionViewModel.addTaskTag(newTag)
+            }
+
+            //save data in taskItem
+            else {
+                taskTag!!.name = name
+                taskTag!!.desc = desc
+                tagSelectionViewModel.editTaskTag(taskTag!!)
+            }
+
+            //reset sheet
+            binding.name.setText("")
+            binding.desc.setText("")
+            dismiss()
         }
-
-        //reset sheet
-        binding.name.setText("")
-        binding.desc.setText("")
-        dismiss()
-    }
-
-    /**
-     * Disable the save button while no task title is present
-     */
-    private fun updateSaveButtonState() {
-        val name = binding.name.text.toString()
-        binding.saveButton.isEnabled = name.isNotBlank()
     }
 
     override fun onDestroyView() {

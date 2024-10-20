@@ -39,9 +39,6 @@ class NewTaskSheet(
         )
     }
 
-    //prevent injections
-    private val _illegalCharacters = arrayOf("DELETE", "INSERT", "UPDATE", "PUT", "*", "\"")
-
     //link using MVVM
     private var _binding: FragmentNewTaskSheetBinding? = null
     private val binding get() = _binding!!
@@ -246,6 +243,7 @@ class NewTaskSheet(
     private fun saveAction() {
         //save data from sheet
         val name = binding.name.text.toString()
+        val desc = binding.desc.text.toString()
 
         if(name == "") {
             Toast.makeText(requireContext(), "Name cannot be blank", Toast.LENGTH_SHORT)
@@ -255,9 +253,7 @@ class NewTaskSheet(
 
         else if (
                 //check if name contains illegal strings
-                _illegalCharacters.firstOrNull {
-                    name.contains(it)
-                }?.let { illegalCharacter ->
+                Utilities.validateString(name)?.let { illegalCharacter ->
                     //if so, inform user of invalid string
                     Toast.makeText(requireContext(), "Name cannot contain \"$illegalCharacter\"", Toast.LENGTH_SHORT)
                         .show()
@@ -266,8 +262,18 @@ class NewTaskSheet(
                     true } == true
             )
 
+        else if (
+        //check if description contains illegal strings
+            Utilities.validateString(desc)?.let { illegalCharacter ->
+                //if so, inform user of invalid string
+                Toast.makeText(requireContext(), "Description cannot contain \"$illegalCharacter\"", Toast.LENGTH_SHORT)
+                    .show()
+
+                //return a bool value to satisfy the if statement
+                true } == true
+        )
+
         else{
-            val desc = binding.desc.text.toString()
             val dueTimeString = dueTime?.let { TaskItem.timeFormatter.format(it) }
             val dueDateString = dueDate?.let { TaskItem.dateFormatter.format(it) }
 
