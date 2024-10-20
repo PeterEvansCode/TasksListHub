@@ -40,22 +40,31 @@ class TaskItemViewHolder(
             binding.dueText.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         }
 
+        //complete task
         binding.completeButton.setOnClickListener{
             clickListener.toggleCompleteTaskItem(taskItem)
         }
+
+        //edit task
         binding.taskCellContainer.setOnClickListener{
             clickListener.editTaskItem(taskItem)
         }
+
+        //delete task
         binding.deleteButton.setOnClickListener{
             clickListener.deleteTaskItem(taskItem)
         }
 
+        //edit tags
         binding.addTagButton.setOnClickListener {
             clickListener.openTaskTagMenu(taskItem)
         }
 
-        if(taskItem.formatDueTime() != null){
-            binding.dueText.text = Utilities.formatDateTime(taskItem.formatDueTime(), taskItem.formatDueDate())
+        if(taskItem.formatDueDate() != null){
+            if (taskItem.formatDueTime() == null)
+                binding.dueText.text = Utilities.formatDateTime(taskItem.formatDueTime(), taskItem.formatDueDate())
+            else
+                binding.dueText.text = Utilities.formatDateTime(taskItem.formatDueTime(), taskItem.formatDueDate())
         }
         else
             binding.dueText.text = ""

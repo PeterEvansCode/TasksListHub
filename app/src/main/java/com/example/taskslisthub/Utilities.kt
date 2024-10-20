@@ -118,13 +118,7 @@ class Utilities {
         fun dateTimeShortWordFormat(time: LocalTime? = null, date: LocalDate? = null): String{
             var timeString = ""
             var dateString = ""
-            if (time != null){
-                timeString = String.format(
-                    "%02d:%02d",
-                    time.hour,
-                    time.minute
-                )
-            }
+            val returnVal: String
 
             if (date != null){
                 dateString = String.format(
@@ -133,13 +127,26 @@ class Utilities {
                     date.dayOfMonth,
                     date.month.name.title().take(3)
                 )
+
+                if (time != null){
+                    timeString = String.format(
+                        "%02d:%02d",
+                        time.hour,
+                        time.minute
+                    )
+
+                    //concatenate strings if time was given
+                    returnVal = arrayOf(dateString, timeString).joinToString(", ")
+                }
+
+                //if no time is given
+                else returnVal = dateString
             }
 
-            return String.format(
-                "%s, %s",
-                dateString,
-                timeString
-            )
+            //safety case
+            else returnVal = ""
+
+            return returnVal
         }
 
         /**

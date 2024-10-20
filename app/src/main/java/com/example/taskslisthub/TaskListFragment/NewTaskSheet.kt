@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TimePicker
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.lifecycle.ViewModelProvider
@@ -37,6 +38,9 @@ class NewTaskSheet(
             "High Priority"
         )
     }
+
+    //prevent injections
+    private val _illegalCharacters = arrayOf("DELETE", "INSERT", "UPDATE", "PUT", "*", "\"")
 
     //link using MVVM
     private var _binding: FragmentNewTaskSheetBinding? = null
@@ -75,10 +79,10 @@ class NewTaskSheet(
             priority = taskItem.priority
             updateSetPriorityButtonText()
 
-            taskItem.formatDueTime()?.let {
-                dueTime = it
-                updateDueButtonText()
-            }
+            //update due button
+            dueDate = taskItem.formatDueDate()
+            dueTime = taskItem.formatDueTime()
+            updateDueButtonText()
         }
 
         //if creating a new task item
@@ -96,25 +100,16 @@ class NewTaskSheet(
         binding.duePickerButton.setOnClickListener {
             openDatePicker()
         }
-        updateSaveButtonState()
-
-        // save button is disabled while no title has been entered
-        binding.name.addTextChangedListener(object : TextWatcher {
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                updateSaveButtonState()
-            }
-
-            //necessary overrides (no functionality)
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun afterTextChanged(s: Editable?) {}
-        })
     }
 
     private fun openDatePicker() {
+        var dateSelected = false
+
         var year: Int
         var month: Int
         var day: Int
 
+        //set initial date as today if no dueDate given
         if (dueDate == null) {
             // Get the current date to initialize the DatePicker
             val calendar = Calendar.getInstance()
@@ -123,9 +118,10 @@ class NewTaskSheet(
             day = calendar.get(Calendar.DAY_OF_MONTH)
         }
 
+        //otherwise, set default as due date
         else{
             year = dueDate!!.year
-            month = dueDate!!.monthValue
+            month = dueDate!!.monthValue - 1
             day = dueDate!!.dayOfMonth
         }
 
@@ -134,6 +130,7 @@ class NewTaskSheet(
             requireContext(),
             //save result
             { _, selectedYear, selectedMonth, selectedDay ->
+                dateSelected = true
                 dueDate = LocalDate.of(selectedYear, selectedMonth + 1, selectedDay)
             },
             year, month, day
@@ -141,7 +138,11 @@ class NewTaskSheet(
 
         // Set OnDismissListener to handle when the dialog is dismissed
         datePickerDialog.setOnDismissListener {
-            openTimePicker()
+            //only open time picker if date has been selected
+            if (dateSelected) {
+                openTimePicker()
+                dateSelected = false
+            }
         }
 
         datePickerDialog.setTitle("Task Due Date")
@@ -155,15 +156,15 @@ class NewTaskSheet(
         val leaveBlankButton: Button = dialogView.findViewById(R.id.button_leave_blank)
         val okButton: Button = dialogView.findViewById(R.id.button_ok)
 
+        //set default time
         timePicker.setIs24HourView(true)
+        timePicker.hour = dueTime?.hour ?: LocalTime.now().hour
+        timePicker.minute = dueTime?.minute ?: LocalTime.now().minute
 
         // Set up the dialog
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .create()
-
-        if (dueTime == null)
-            dueTime = LocalTime.now()
 
         // Handle "Leave Time Blank" button click
         leaveBlankButton.setOnClickListener {
@@ -245,41 +246,61 @@ class NewTaskSheet(
     private fun saveAction() {
         //save data from sheet
         val name = binding.name.text.toString()
-        val desc = binding.desc.text.toString()
-        val dueTimeString = dueTime?.let { TaskItem.timeFormatter.format(it) }
-        val dueDateString = dueDate?.let { TaskItem.dateFormatter.format(it) }
 
-        //create new task item if one doesn't already exist
-        if (taskItem == null) {
-            val newTask = TaskItem(name = name, desc = desc, dueTimeString = dueTimeString, dueDateString = dueDateString, priority = priority)
-            taskViewModel.addTaskItem(newTask)
+        if(name == "") {
+            Toast.makeText(requireContext(), "Name cannot be blank", Toast.LENGTH_SHORT)
+                .show()
 
-            //add tag if currently in a tag folder
-            if (taskTag != null) taskViewModel.addTagsToTask(newTask, taskTag)
         }
 
-        //save data in taskItem
-        else {
-            taskItem.name = name
-            taskItem.desc = desc
-            taskItem.dueTimeString = dueTimeString
-            taskItem.dueDateString = dueDateString
-            taskItem.priority = priority
-            taskViewModel.updateTaskItem(taskItem)
+        else if (
+                //check if name contains illegal strings
+                _illegalCharacters.firstOrNull {
+                    name.contains(it)
+                }?.let { illegalCharacter ->
+                    //if so, inform user of invalid string
+                    Toast.makeText(requireContext(), "Name cannot contain \"$illegalCharacter\"", Toast.LENGTH_SHORT)
+                        .show()
+
+                    //return a bool value to satisfy the if statement
+                    true } == true
+            )
+
+        else{
+            val desc = binding.desc.text.toString()
+            val dueTimeString = dueTime?.let { TaskItem.timeFormatter.format(it) }
+            val dueDateString = dueDate?.let { TaskItem.dateFormatter.format(it) }
+
+            //create new task item if one doesn't already exist
+            if (taskItem == null) {
+                val newTask = TaskItem(
+                    name = name,
+                    desc = desc,
+                    dueTimeString = dueTimeString,
+                    dueDateString = dueDateString,
+                    priority = priority
+                )
+                taskViewModel.addTaskItem(newTask)
+
+                //add tag if currently in a tag folder
+                if (taskTag != null) taskViewModel.addTagsToTask(newTask, taskTag)
+            }
+
+            //save data in taskItem
+            else {
+                taskItem.name = name
+                taskItem.desc = desc
+                taskItem.dueTimeString = dueTimeString
+                taskItem.dueDateString = dueDateString
+                taskItem.priority = priority
+                taskViewModel.updateTaskItem(taskItem)
+            }
+
+            //reset sheet
+            binding.name.setText("")
+            binding.desc.setText("")
+            dismiss()
         }
-
-        //reset sheet
-        binding.name.setText("")
-        binding.desc.setText("")
-        dismiss()
-    }
-
-    /**
-     * Disable the save button while no task title is present
-     */
-    private fun updateSaveButtonState() {
-        val name = binding.name.text.toString()
-        binding.saveButton.isEnabled = name.isNotBlank()
     }
 
     override fun onDestroyView() {

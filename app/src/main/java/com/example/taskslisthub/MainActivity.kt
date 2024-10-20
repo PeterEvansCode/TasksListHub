@@ -108,13 +108,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 R.id.nav_settings -> openFragment(SettingsFragment())
 
-                R.id.nav_deleted_tasks ->
+                /*R.id.nav_deleted_tasks ->
                     Toast.makeText(this, "previously deleted tasks", Toast.LENGTH_SHORT)
                         .show()
 
                 R.id.nav_deleted_tags ->
                     Toast.makeText(this, "previously deleted tasks", Toast.LENGTH_SHORT)
-                        .show()
+                        .show()*/
 
                 R.id.nav_priority_high -> openFragment(TaskListFragment(priorityFilter = 3))
 
