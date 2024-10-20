@@ -3,6 +3,7 @@ package com.example.taskslisthub.TaskListFragment
 import android.content.Context
 import android.graphics.Paint
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -20,8 +21,17 @@ class TaskItemViewHolder(
     ): RecyclerView.ViewHolder(binding.root)
 {
     fun bindTaskItem(taskItem: TaskItem){
+
         //display task name
         binding.name.text = taskItem.name
+
+        //task description
+        if (taskItem.desc.isEmpty()) {
+            binding.taskDesc.visibility = View.GONE
+        } else {
+            binding.taskDesc.visibility = View.VISIBLE
+            binding.taskDesc.text = taskItem.desc
+        }
 
         //if completed, show task as completed
         if(taskItem.isCompleted()){

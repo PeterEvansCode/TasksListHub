@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
+    <!--Generally Navigation-->
     <group
         android:checkableBehavior="single"
         android:id="@+id/group_misc">
@@ -24,7 +25,8 @@
             android:title="About Us"/>
     </group>
 
-    <group
+    <!--Recently Deleted Group-->
+    <!--group
         android:checkableBehavior="single"
         android:id="@+id/group_deleted">
 
@@ -38,8 +40,9 @@
             android:icon="@drawable/baseline_delete_24"
             android:title="Previously Deleted Tags"/>
 
-    </group>
+    </group-->
 
+    <!--Priorities Group-->
     <group
         android:checkableBehavior="single"
         android:id="@+id/group_priorities">

@@ -53,15 +53,23 @@
     <style name="title">
         <item name="android:textSize">24sp</item>
         <item name="android:layout_marginStart">16dp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
     <style name="heading_1">
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginTop">16dp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
     <style name="heading_2">
         <item name="android:textSize">12sp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="secondary_text">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
     </style>
 </resources>

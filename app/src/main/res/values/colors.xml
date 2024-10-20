@@ -17,8 +17,10 @@
     <color name="lightBackground">#F0F0F0</color>
     <color name="lightSurface">#E5E5E5</color>
     <color name="lightOnSurface">#0F0F0F</color>
+    <color name="lightOnSurfaceVariant">#757575</color>
 
     <color name="darkBackground">#121212</color>
     <color name="darkSurface">#1E1E1E</color>
     <color name="darkOnSurface">#F0F0F0</color>
+    <color name="darkOnSurfaceVariant">#757575</color>
 </resources>
