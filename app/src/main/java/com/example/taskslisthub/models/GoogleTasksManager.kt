@@ -90,19 +90,48 @@ class GoogleTasksManager() {
      * @return Returns the passed in taskItem (unnecessary but helps to show that the taskItem has been updated)
      */
     fun newTask(taskItem: TaskItem): TaskItem{
-        val newTask = Task().apply{
-            title = taskItem.name
-            notes = taskItem.desc
-            due = taskItem.dateTimeGoogleFormat()
+        try {
+
+            val newTask = Task().apply {
+                title = taskItem.name
+                notes = taskItem.desc
+                due = taskItem.dateTimeGoogleFormat()
+            }
+
+            val createdTask = tasksService.tasks().insert(tasksListId, newTask).execute()
+
+            //update taskItem with googleId
+            taskItem.apply{
+                googleId = createdTask.id
+            }
+
+            println("Task edited successfully.")
         }
-
-        val createdTask = tasksService.tasks().insert(tasksListId, newTask).execute()
-
-        //update taskItem with googleId
-        taskItem.googleId = createdTask.id
+        catch(e: Exception){
+            println("Error editing task: ${e.message}")
+        }
         return taskItem
     }
 
+    fun editTask(taskItem: TaskItem){
+
+        try{
+            val tasks = getAllTasks()
+
+            val editedTask = Task().apply {
+                id = taskItem.googleId
+                title = taskItem.name
+                notes = taskItem.desc
+                due = taskItem.dateTimeGoogleFormat()
+            }
+
+            tasksService.tasks().update(tasksListId, taskItem.googleId, editedTask).execute()
+            println("Task edited successfully.")
+        }catch(e: Exception){
+            println("Task edit failed.")
+        }
+
+    }
 
     fun deleteTask(taskItem: TaskItem) {
         try {
@@ -111,5 +140,24 @@ class GoogleTasksManager() {
         } catch (e: Exception) {
             println("Error deleting task: ${e.message}")
         }
+    }
+
+    fun getAllTasks(): List<Task> {
+        try {
+            // Fetch all tasks for the specific task list ID
+            val tasks = tasksService.tasks().list(tasksListId).execute()
+
+            tasks.items?.let {
+                println("Tasks retrieved successfully from task list ID: $tasksListId")
+                return it
+            } ?: run {
+                println("No tasks found for the given task list ID.")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            println("Error retrieving tasks: ${e.message}")
+        }
+
+        return mutableListOf()
     }
 }

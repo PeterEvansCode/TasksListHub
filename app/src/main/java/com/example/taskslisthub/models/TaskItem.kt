@@ -1,9 +1,5 @@
 package com.example.taskslisthub.models
 
-import android.content.Context
-import androidx.core.content.ContextCompat
-import com.example.taskslisthub.R
-import com.example.taskslisthub.Utilities
 import com.example.taskslisthub.models.taskStores.HashOnID
 import com.google.api.client.util.DateTime
 import java.time.Instant
@@ -24,7 +20,7 @@ class TaskItem(
     var dueDateString: String? = null,
     var completedDateString: String? = null,
     var tags: HashOnID<TaskTag> = HashOnID(),
-    var priority: Int = 0
+    var priority: Int = 0,
 ) : IStandardRecord
 {
     //converts completedDateString into a LocalDate type

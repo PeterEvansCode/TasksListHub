@@ -144,6 +144,7 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
     @WorkerThread
     suspend fun editTaskItem(taskItem: TaskItem)
     {
+        _googleTasksManager.editTask(taskItem)
         db.updateTask(taskItem)
         postTaskValues()
     }
