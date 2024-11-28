@@ -25,6 +25,14 @@ class TaskItemViewHolder(
         //display task name
         binding.name.text = taskItem.name
 
+        binding.taskCellContainer.isSelected = false
+
+        binding.taskCellContainer.setOnLongClickListener {
+            binding.taskCellContainer.isSelected = !binding.taskCellContainer.isSelected
+            clickListener.toggleSelection(taskItem, !binding.taskCellContainer.isSelected)
+            true
+        }
+
         //task description
         if (taskItem.desc.isEmpty()) {
             binding.taskDesc.visibility = View.GONE

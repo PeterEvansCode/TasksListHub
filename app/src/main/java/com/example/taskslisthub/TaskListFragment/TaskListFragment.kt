@@ -169,6 +169,11 @@ class TaskListFragment(
         tagSelectionFragment.show(requireActivity().supportFragmentManager, "TagSelectionFragment")
     }
 
+    override fun toggleSelection(taskItem: TaskItem, selected: Boolean) {
+        if (selected) taskViewModel.addTaskToSelection(taskItem)
+        else taskViewModel.removeTaskFromSelection(taskItem)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         binding.taskDrawerButton.cleanUp()

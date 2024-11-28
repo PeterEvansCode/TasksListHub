@@ -8,4 +8,5 @@ interface ITaskItemClickListener
     fun toggleCompleteTaskItem(taskItem: TaskItem)
     fun deleteTaskItem(taskItem: TaskItem)
     fun openTaskTagMenu(taskItem: TaskItem)
+    fun toggleSelection(taskItem: TaskItem, selected: Boolean)
 }

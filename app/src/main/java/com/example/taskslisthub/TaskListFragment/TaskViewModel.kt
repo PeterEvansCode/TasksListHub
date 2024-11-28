@@ -16,6 +16,9 @@ class TaskViewModel(private val repository: TaskItemRepository) : ViewModel()
 {
     var taskItems: LiveData<List<TaskItem>> = repository.filteredTasksLiveData
 
+    //selected tasks
+    private val _selectedTasks = mutableListOf<TaskItem>()
+
     fun addTaskItem(newTask: TaskItem) = viewModelScope.launch(Dispatchers.IO) {
         repository.addTaskItem(newTask)
     }
@@ -65,6 +68,16 @@ class TaskViewModel(private val repository: TaskItemRepository) : ViewModel()
     fun setGoogleAccount(context: Context) {
         repository.setGoogleAccount(context)
     }
+
+    fun addTaskToSelection(taskItem: TaskItem) {
+        _selectedTasks.add(taskItem)
+    }
+
+    fun removeTaskFromSelection(taskItem: TaskItem) {
+        _selectedTasks.remove(taskItem)
+    }
+
+    fun hasSelection(): Boolean = _selectedTasks.size > 0
 }
 
 class TaskItemModelFactory(private val repository: TaskItemRepository): ViewModelProvider.Factory
