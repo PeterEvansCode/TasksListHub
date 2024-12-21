@@ -23,6 +23,9 @@ class TaskItem(
     var priority: Int = 0,
 ) : IStandardRecord
 {
+    val timeMade = LocalTime.now()
+    val dateMade = LocalDate.now()
+
     //converts completedDateString into a LocalDate type
     fun formatCompletedDate(): LocalDate? = if (completedDateString == null) null
         else LocalDate.parse(completedDateString, dateFormatter)

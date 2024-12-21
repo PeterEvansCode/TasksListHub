@@ -17,7 +17,7 @@ import com.example.taskslisthub.models.TaskTag
  */
 class TaskTagAdapter(
     private val taskTags: List<TaskTag>,
-    private val numAssociatedTags: Int,
+    private val numAssociatedTags: Int?,
     private val clickListener: ITaskTagClickListener
 ) : RecyclerView.Adapter<TaskTagViewHolder>() {
 
@@ -30,7 +30,7 @@ class TaskTagAdapter(
 
     override fun onBindViewHolder(holder: TaskTagViewHolder, position: Int) {
         val taskTag = taskTags[position]
-        val isAssignedToTask = position < numAssociatedTags
+        val isAssignedToTask = if(numAssociatedTags != null) position < numAssociatedTags else null
         holder.bindTaskTag(taskTags[position], isAssignedToTask)
     }
 }

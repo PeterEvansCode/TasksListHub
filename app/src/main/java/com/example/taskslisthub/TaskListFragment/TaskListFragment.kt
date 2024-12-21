@@ -112,9 +112,9 @@ class TaskListFragment(
             popupMenu.setOnMenuItemClickListener { item ->
                 var returnVal = false
                 when (item.itemId) {
-                    R.id.sort_custom -> {
+                    R.id.sort_default -> {
                         // Handle edit action
-                        sortMethod = TaskItemStore.CUSTOM
+                        sortMethod = TaskItemStore.DEFAULT
                         returnVal = true
                     }
 

@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import com.example.taskslisthub.SettingsFragment.SettingsFragment
+import com.example.taskslisthub.TagSelectionFragment.TagSelectionFragment
 import com.example.taskslisthub.TaskListFragment.TaskListFragment
 import com.example.taskslisthub.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
@@ -107,6 +108,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 R.id.nav_about -> openFragment(AboutFragment())
 
                 R.id.nav_settings -> openFragment(SettingsFragment())
+
+                R.id.nav_edit_tags -> {
+                    val tagSelectionFragment = TagSelectionFragment(null)
+                    tagSelectionFragment.show(supportFragmentManager, "TagSelectionFragment")
+                }
 
                 /*R.id.nav_deleted_tasks ->
                     Toast.makeText(this, "previously deleted tasks", Toast.LENGTH_SHORT)

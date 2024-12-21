@@ -131,7 +131,9 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
         db.deleteTag(taskTag)
 
         //hashmap and related tasks
-        if (_hashOnTags[taskTag] != null) for(taskItem in _hashOnTags[taskTag]!!.toList()) taskItem.tags.remove(taskTag)
+        if (_hashOnTags[taskTag] != null)
+            for(taskItem in _hashOnTags[taskTag]!!.toList())
+                taskItem.tags.remove(taskTag)
         _hashOnTags.remove(taskTag)
 
         //tag store
@@ -163,7 +165,7 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
         for(taskTag in taskTags) taskItem.tags.add(taskTag)
 
         //add to hashmap
-        for(taskTag in taskTags) taskItem.tags.add(taskTag)
+        for(taskTag in taskTags) _hashOnTags[taskTag]!!.add(taskItem)
 
         //update database
         db.insertTaskTagRelations(taskItem, taskTags)
@@ -181,7 +183,7 @@ class TaskItemRepository(private val db: TaskDatabaseManager)
         for(taskTag in taskTags) taskItem.tags.remove(taskTag)
 
         //add to hashmap
-        for(taskTag in taskTags) taskItem.tags.remove(taskTag)
+        for(taskTag in taskTags) _hashOnTags[taskTag]!!.remove(taskItem)
 
         //update database
         db.deleteTaskTagRelations(taskItem, taskTags)

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskslisthub.R
 import com.example.taskslisthub.Utilities
@@ -77,13 +78,13 @@ class TaskItemViewHolder(
         else
             binding.dueText.text = ""
 
-        displayTags(taskItem.tags.values.toList())
+        displayTagsAndPriority(taskItem, taskItem.tags.values.toList())
     }
 
-    private fun displayTags(tags: List<TaskTag>) {
+    private fun displayTagsAndPriority(taskItem: TaskItem, tags: List<TaskTag>) {
         // Clear previous tags if any
         binding.tagLayout.removeAllViews()
-
+        displayPriority(taskItem)
         for (tag in tags) {
             val textView = createTagTextView(tag)
             binding.tagLayout.addView(textView)
@@ -92,12 +93,38 @@ class TaskItemViewHolder(
 
     private fun createTagTextView(tag: TaskTag): LinearLayout {
         // Create the binding for tag_item.xml
-        val binding = TaskTagCellBinding.inflate(LayoutInflater.from(context))
+        val tagBinding = TaskTagCellBinding.inflate(LayoutInflater.from(context))
 
         // Set the tag name using the binding
-        binding.tagTextView.text = tag.name
+        tagBinding.tagTextView.text = tag.name
 
         // Return the root view (the inflated layout)
-        return binding.root
+        return tagBinding.root
+    }
+
+    private fun displayPriority(taskItem: TaskItem){
+        //if the task has a priority
+        if (taskItem.priority != 0) {
+            // Create the binding for tag_item.xml
+            val tagBinding = TaskTagCellBinding.inflate(LayoutInflater.from(context))
+
+            // Set the tag name using the binding
+            tagBinding.tagTextView.text = when (taskItem.priority) {
+                1 -> "Low Priority"
+                2 -> "Medium Priority"
+                3 -> "High Priority"
+                else -> "ERROR"
+            }
+
+            tagBinding.tagTextView.setTextColor(when (taskItem.priority) {
+                1 -> ContextCompat.getColor(context, R.color.priority_low)
+                2 -> ContextCompat.getColor(context, R.color.priority_medium)
+                3 -> ContextCompat.getColor(context, R.color.priority_high)
+                else -> ContextCompat.getColor(context, R.color.red)
+            })
+
+            val textView = tagBinding.root
+            binding.tagLayout.addView(textView)
+        }
     }
 }

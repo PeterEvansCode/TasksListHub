@@ -25,7 +25,7 @@ import com.example.taskslisthub.models.taskStores.HashOnID
 import com.example.taskslisthub.models.taskStores.TaskItemStore
 
 
-class TagSelectionFragment(var taskItem: TaskItem) : DialogFragment(), ITaskTagClickListener
+class TagSelectionFragment(var taskItem: TaskItem?) : DialogFragment(), ITaskTagClickListener
 {
     //binding
     private var _binding: FragmentTagSelectionBinding? = null
@@ -96,18 +96,26 @@ class TagSelectionFragment(var taskItem: TaskItem) : DialogFragment(), ITaskTagC
     }
 
     private fun setRecyclerView() {
-        var tagSelectionFragment = this
+        val tagSelectionFragment = this
         tagSelectionViewModel.taskTags.observe(viewLifecycleOwner) { allTags ->
-            //sort tags first by association, then by name
-            val taskAssociatedTags = allTags.filter { taskItem.tags.containsKey(it.id) }
-                .sortedBy { it.name }
-            val otherTags = allTags.filter { !taskItem.tags.containsKey(it.id) }
-                .sortedBy { it.name }
-            val sortedTags = taskAssociatedTags + otherTags
+            if (taskItem != null) {
+                //sort tags first by association, then by name
+                val taskAssociatedTags = allTags.filter { taskItem!!.tags.containsKey(it.id) }
+                    .sortedBy { it.name }
+                val otherTags = allTags.filter { !taskItem!!.tags.containsKey(it.id) }
+                    .sortedBy { it.name }
+                val sortedTags = taskAssociatedTags + otherTags
 
-            _binding!!.tagRecyclerView.apply {
-                layoutManager = LinearLayoutManager(context)
-                adapter = TaskTagAdapter(sortedTags, taskAssociatedTags.size, tagSelectionFragment)
+                _binding!!.tagRecyclerView.apply {
+                    layoutManager = LinearLayoutManager(context)
+                    adapter = TaskTagAdapter(sortedTags, taskAssociatedTags.size, tagSelectionFragment)
+                }
+            }
+            else{
+                _binding!!.tagRecyclerView.apply {
+                    layoutManager = LinearLayoutManager(context)
+                    adapter = TaskTagAdapter(allTags, null, tagSelectionFragment)
+                }
             }
         }
     }
@@ -115,9 +123,12 @@ class TagSelectionFragment(var taskItem: TaskItem) : DialogFragment(), ITaskTagC
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
 
-        //save changes
-        tagSelectionViewModel.addTagsToTask(taskItem, _tagsToAdd.values.toList())
-        tagSelectionViewModel.removeTagsFromTask(taskItem, _tagsToRemove.values.toList())
+        if (taskItem != null) {
+            //save changes
+            tagSelectionViewModel.addTagsToTask(taskItem!!, _tagsToAdd.values.toList())
+            tagSelectionViewModel.removeTagsFromTask(taskItem!!, _tagsToRemove.values.toList())
+
+        }
     }
 
     override fun onDestroyView() {

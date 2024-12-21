@@ -9,13 +9,14 @@ class TaskTagViewHolder(
     private val binding: TaskTagMenuCellBinding,
     private val clickListener: ITaskTagClickListener
 ): RecyclerView.ViewHolder(binding.root){
-    fun bindTaskTag(taskTag: TaskTag, isAssignedToTask: Boolean){
+    fun bindTaskTag(taskTag: TaskTag, isAssignedToTask: Boolean?){
         //display task name
         binding.tagName.text = taskTag.name
 
         //check box if task is already assigned
-        binding.tagCheckbox.isChecked = isAssignedToTask
-
+        if (isAssignedToTask == null) binding.tagCellContainer.removeView(binding.tagCheckbox)
+        else binding.tagCheckbox.isChecked = isAssignedToTask!!
+            
         binding.tagCheckbox.setOnClickListener{
             if (binding.tagCheckbox.isChecked) clickListener.selectTaskTag(taskTag)
             else clickListener.deselectTaskTag(taskTag)
