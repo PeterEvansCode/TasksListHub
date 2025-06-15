@@ -3,7 +3,6 @@ package com.example.taskslisthub
 import android.content.Context
 import com.example.taskslisthub.models.TaskDatabaseManager
 import androidx.annotation.WorkerThread
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.taskslisthub.models.GoogleTasksManager

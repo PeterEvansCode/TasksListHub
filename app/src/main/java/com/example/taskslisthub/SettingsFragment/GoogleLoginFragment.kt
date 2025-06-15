@@ -11,8 +11,6 @@ import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.taskslisthub.BuildConfig
 import com.example.taskslisthub.R
-import com.example.taskslisthub.TaskListFragment.TaskItemModelFactory
-import com.example.taskslisthub.TaskListFragment.TaskViewModel
 import com.example.taskslisthub.TasksListHub
 import com.example.taskslisthub.databinding.FragmentGoogleLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn

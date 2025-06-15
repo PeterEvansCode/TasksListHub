@@ -3,13 +3,11 @@ package com.example.taskslisthub
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -19,7 +17,6 @@ import com.example.taskslisthub.TagSelectionFragment.TagSelectionFragment
 import com.example.taskslisthub.TaskListFragment.TaskListFragment
 import com.example.taskslisthub.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 

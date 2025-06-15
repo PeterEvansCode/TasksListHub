@@ -1,19 +1,364 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".AboutFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AboutFragment">
+    android:orientation="vertical">
 
-    <com.example.taskslisthub.DrawerButton
-        android:id="@+id/toolbar"
+    <!-- Header with Drawer Button and Title -->
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:padding="16dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+        <com.example.taskslisthub.DrawerButton
+            android:id="@+id/about_drawer_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="5dp"
+            android:layout_alignParentStart="true"/>
+
+        <TextView
+            style="@style/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="About"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/about_drawer_button"
+            />
+    </RelativeLayout>
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="About" />
+        android:padding="16dp">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Task Hub intends to extend the existing capabilities of the Google Tasks app by adding additional features such as:"
+                android:paddingBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/features"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="• Tagging tasks\n• Search bar functionality\n• Additional sorting options\n• Task priority levels"
+                android:paddingBottom="12dp" />
+
+            <TextView
+                android:id="@+id/integration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Task Hub also provides integration with Google Calendar, allowing users to continue to use the benefits of the Google workflow, whilst providing an improved task app."
+                android:paddingBottom="16dp" />
+
+            <TextView
+                android:id="@+id/contact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Contact: Please email pecode.info@gmail.com for any questions or suggestions!"
+                android:autoLink="email"
+                android:paddingBottom="16dp" />
+
+            <TextView
+                android:id="@+id/repo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Repo: https://github.com/PeterEvansCode/TasksListHub"
+                android:autoLink="web"
+                android:paddingBottom="16dp" />
+
+            <TextView
+                android:id="@+id/demo_video"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Demo Video: https://youtube.com/shorts/ckm9F2jZY4M?feature=share"
+                android:autoLink="web"
+                android:paddingBottom="12dp" />
+
+            <!--Privacy Policy-->
+            <!---->
+            <!---->
+            <!---->
+            <TextView
+                android:id="@+id/privacy_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Privacy Policy"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:paddingTop="24dp"
+                android:paddingBottom="12dp" />
+
+            <TextView
+                android:id="@+id/privacy_intro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="We at Task Hub respect your privacy and are committed to ensuring your data remains secure and private."
+                android:paddingBottom="12dp" />
+
+            <TextView
+                android:id="@+id/privacy_data_collection_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Data Collection"
+                android:textStyle="bold"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/privacy_data_collection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Our app does not collect or transmit any personal data to us or any third-party servers, besides updating tasks on your Google Tasks account."
+                android:paddingBottom="12dp" />
+
+            <TextView
+                android:id="@+id/privacy_google_account_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Google Account Integration"
+                android:textStyle="bold"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/privacy_google_account_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Our app provides an optional feature to link your Google account for enhanced functionality. This feature may access the following data from your Google account:"
+                android:paddingBottom="8dp" />
+
+            <TextView
+                android:id="@+id/privacy_google_account_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="• Your account picture\n• Your account email\n• Your account name"
+                android:paddingBottom="12dp" />
+
+            <TextView
+                android:id="@+id/privacy_data_usage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="All data accessed remains solely on your device and is not shared, stored, or transmitted to us or any external servers.\n\nTask Hub does not read any tasks on your Google account, and will only add or remove tasks when the user requests to do so."
+                android:paddingBottom="12dp" />
+
+            <TextView
+                android:id="@+id/privacy_user_control_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="User Control"
+                android:textStyle="bold"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/privacy_user_control_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="You retain full control over your data and can revoke access to your Google account at any time through your device or Google account settings."
+                android:paddingBottom="12dp" />
+
+            <TextView
+                android:id="@+id/privacy_contact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="If you have any questions about this privacy policy or how your data is handled, please contact us at pecode.info@gmail.com."
+                android:autoLink="email"
+                android:paddingBottom="24dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="To view this policy online please visit https://github.com/PeterEvansCode/TasksListHub/blob/main/PRIVACY_POLICY.md"
+                android:autoLink="web"
+                android:paddingBottom="12dp" />
+
+            <!--Terms of Service-->
+            <!---->
+            <!---->
+            <!---->
+            <TextView
+                android:id="@+id/tos_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Terms of Service"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:paddingBottom="12dp" />
+
+            <TextView
+                android:id="@+id/tos_effective_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Effective Date: 30th September 2024"
+                android:textStyle="italic"
+                android:paddingBottom="16dp" />
+
+            <TextView
+                android:id="@+id/tos_intro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Welcome to Tasks List Hub (the &quot; App &quot;). These Terms of Service (&quot;Terms&quot;) govern your use of the App and the services provided through it. By accessing or using the App, you agree to comply with these Terms."
+                android:paddingBottom="16dp" />
+
+            <TextView
+                android:id="@+id/tos_1_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Acceptance of Terms"
+                android:textStyle="bold"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tos_1_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="By using the App, you acknowledge that you have read, understood, and agree to be bound by these Terms."
+                android:paddingBottom="12dp" />
+
+            <TextView
+                android:id="@+id/tos_2_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2. User Obligations"
+                android:textStyle="bold"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tos_2_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="• You agree to use the App only for lawful purposes and in accordance with these Terms.\n• The App is released under the MIT License, which allows you to modify, distribute, and create derivative works. You are free to use the App as you see fit, as long as credit is given to Peter Evans Code.\n• However, you acknowledge that any modifications or uses of the App are at your own risk, and Tasks List Hub and its developers shall not be liable for any issues arising from such changes."
+                android:paddingBottom="12dp" />
+
+            <TextView
+                android:id="@+id/tos_3_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="3. Intellectual Property"
+                android:textStyle="bold"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tos_3_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="The App and its original content, features, and functionality are and will remain the exclusive property of Tasks List Hub and its developers and are protected by copyright, trademark, and other laws. The App is licensed under the MIT License."
+                android:paddingBottom="12dp" />
+
+            <TextView
+                android:id="@+id/tos_4_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="4. Use of Google API"
+                android:textStyle="bold"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tos_4_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="This App utilizes the Google Tasks API, which is subject to Google's Terms of Service and Privacy Policy. By using this App, you agree to comply with all applicable Google policies."
+                android:paddingBottom="12dp" />
+
+            <TextView
+                android:id="@+id/tos_5_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="5. Privacy Policy"
+                android:textStyle="bold"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tos_5_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Your use of the App is also governed by our Privacy Policy, which explains how we collect, use, and protect your information. By using the App, you consent to the data practices described in our Privacy Policy."
+                android:paddingBottom="12dp" />
+
+            <TextView
+                android:id="@+id/tos_6_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="6. Disclaimers"
+                android:textStyle="bold"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tos_6_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="The App is provided on an &quot;as-is&quot; basis without warranties of any kind, either express or implied. We do not warrant that the App will be error-free, uninterrupted, or free of harmful components."
+            android:paddingBottom="12dp" />
+
+            <TextView
+                android:id="@+id/tos_7_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="7. Limitation of Liability"
+                android:textStyle="bold"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tos_7_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="To the fullest extent permitted by law, Tasks List Hub and its developers shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the App, including any modifications or derivatives made by you or others."
+                android:paddingBottom="12dp" />
+
+            <TextView
+                android:id="@+id/tos_8_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="8. Changes to Terms"
+                android:textStyle="bold"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tos_8_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="We may update these Terms from time to time. We will notify you of any changes by posting the new Terms on this page. You are advised to review these Terms periodically for any changes."
+                android:paddingBottom="12dp" />
+
+            <TextView
+                android:id="@+id/tos_9_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="9. Contact Information"
+                android:textStyle="bold"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tos_9_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="If you have any questions about these Terms, please contact us at: pecode.info@gmail.com"
+                android:autoLink="email"
+                android:paddingBottom="24dp" />
+
+            <TextView
+                android:id="@+id/tos_closing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="By using the App, you agree to these Terms of Service."
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/terms_of_service"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="To view these terms of service online, please visit https://github.com/PeterEvansCode/TasksListHub/blob/main/TERMS_OF_SERVICE.md"
+                android:autoLink="web" />
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

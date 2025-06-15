@@ -1,7 +1,6 @@
 package com.example.taskslisthub.TagSelectionFragment
 
 import androidx.recyclerview.widget.RecyclerView
-import com.example.taskslisthub.databinding.TaskTagCellBinding
 import com.example.taskslisthub.databinding.TaskTagMenuCellBinding
 import com.example.taskslisthub.models.TaskTag
 

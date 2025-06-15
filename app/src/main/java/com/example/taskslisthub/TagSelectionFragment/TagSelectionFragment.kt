@@ -9,7 +9,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -22,7 +21,6 @@ import com.example.taskslisthub.databinding.FragmentTagSelectionBinding
 import com.example.taskslisthub.models.TaskItem
 import com.example.taskslisthub.models.TaskTag
 import com.example.taskslisthub.models.taskStores.HashOnID
-import com.example.taskslisthub.models.taskStores.TaskItemStore
 
 
 class TagSelectionFragment(var taskItem: TaskItem?) : DialogFragment(), ITaskTagClickListener

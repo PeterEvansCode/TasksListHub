@@ -3,7 +3,6 @@ package com.example.taskslisthub.SettingsFragment
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.taskslisthub.TagSelectionFragment.TagSelectionViewModel
 import com.example.taskslisthub.TaskItemRepository
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 

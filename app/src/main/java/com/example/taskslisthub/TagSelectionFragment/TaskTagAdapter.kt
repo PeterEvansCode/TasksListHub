@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskslisthub.TagSelectionFragment.ITaskTagClickListener
 import com.example.taskslisthub.TagSelectionFragment.TaskTagViewHolder
-import com.example.taskslisthub.databinding.TaskTagCellBinding
 import com.example.taskslisthub.databinding.TaskTagMenuCellBinding
 import com.example.taskslisthub.models.TaskTag
 
