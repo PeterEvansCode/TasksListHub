@@ -358,6 +358,13 @@
                 android:text="To view these terms of service online, please visit https://github.com/PeterEvansCode/TasksListHub/blob/main/TERMS_OF_SERVICE.md"
                 android:autoLink="web" />
 
+            <TextView
+                android:id="@+id/terms_of_service"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Google Tasks is a trademark of Google LLC."
+                android:autoLink="web" />
+
         </LinearLayout>
 
     </ScrollView>
