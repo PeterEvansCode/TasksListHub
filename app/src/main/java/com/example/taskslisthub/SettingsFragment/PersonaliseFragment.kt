@@ -34,9 +34,9 @@ class PersonaliseFragment : Fragment() {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
         initialiseSpinner()
-        binding.changeColorButton.setOnClickListener{
+        /*binding.changeColorButton.setOnClickListener{
             showColorPicker()
-        }
+        }*/
 
         return binding.root
     }
