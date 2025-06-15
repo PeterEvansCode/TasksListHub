@@ -30,13 +30,13 @@ class AboutFragment : Fragment() {
         // Bind toolbar with activity's drawer layout
         (activity as? AppCompatActivity)?.let { appCompatActivity ->
             val drawerLayout = appCompatActivity.findViewById<DrawerLayout>(R.id.drawer_layout)
-            binding.toolbar.bindWithDrawerLayout(appCompatActivity, drawerLayout)
+            binding.aboutDrawerButton.bindWithDrawerLayout(appCompatActivity, drawerLayout)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
 
-        binding.toolbar.cleanUp()
+        binding.aboutDrawerButton.cleanUp()
     }
 }

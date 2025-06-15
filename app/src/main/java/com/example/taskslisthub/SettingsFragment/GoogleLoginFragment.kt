@@ -70,7 +70,7 @@ class GoogleLoginFragment : Fragment() {
         val signedInAccount = settingsViewModel.getGoogleAccount()
 
         // Set up the Sign-In button
-        binding.signInButton.text = getString(R.string.signed_in_button)
+        //binding.signInButton.text = getString(R.string.signed_in_button)
         binding.signInButton.setOnClickListener {
             signOut()
         }
@@ -87,7 +87,7 @@ class GoogleLoginFragment : Fragment() {
 
     private fun initialiseSignedOut(){
         // Set up the Sign-In button
-        binding.signInButton.text = getString(R.string.signed_out_button)
+        //binding.signInButton.text = getString(R.string.signed_out_button)
         binding.signInButton.setOnClickListener {
             signIn()
         }
