@@ -9,7 +9,7 @@
     android:padding="16dp">
 
     <TextView
-        style="heading_1"
+        style="@style/heading_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Google Account"/>

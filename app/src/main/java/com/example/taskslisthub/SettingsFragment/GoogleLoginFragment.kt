@@ -55,9 +55,9 @@ class GoogleLoginFragment : Fragment() {
 
         val options = GoogleSignInOptions.Builder()
             .requestIdToken(BuildConfig.CLIENT_ID)
-            //.setAccountName(null.toString())
             .requestScopes(Scope("https://www.googleapis.com/auth/tasks"))
             .requestEmail()
+            .requestProfile()
             .build()
         client = GoogleSignIn.getClient(requireActivity(), options)
 
@@ -77,7 +77,7 @@ class GoogleLoginFragment : Fragment() {
             signOut()
         }
         //get account name
-        val accountName = signedInAccount?.displayName
+        val accountName = signedInAccount?.email
         binding.googleAccountName.text = accountName
 
         //load profile picture
