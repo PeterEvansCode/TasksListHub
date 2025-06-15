@@ -3,7 +3,7 @@
 We at Task Hub respect your privacy and are committed to ensuring your data remains secure and private.
 
 ## Data Collection
-Our app does not collect or transmit any personal data to us or any third-party servers.
+Our app does not collect or transmit any personal data to us or any third-party servers, besides updating tasks on your Google Tasks account.
 
 ## Google Account Integration
 Our app provides an optional feature to link your Google account for enhanced functionality. This feature may access the following data from your Google account:
