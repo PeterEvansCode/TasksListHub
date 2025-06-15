@@ -359,7 +359,6 @@
                 android:autoLink="web" />
 
             <TextView
-                android:id="@+id/terms_of_service"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Google Tasks is a trademark of Google LLC."
